@@ -75,7 +75,7 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/mac-v')
         uses: softprops/action-gh-release@v2
         with:
-          name: Macos v${{ steps.ver.outputs.version }}
+          name: macOS v${{ steps.ver.outputs.version }}
           body: Pre-release: macOS MihomoTray v${{ steps.ver.outputs.version }} Apple Silicon + Intel (built by GitHub Actions).
           tag_name: ${{ github.ref_name }}
           files: |

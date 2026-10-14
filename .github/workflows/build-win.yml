@@ -73,6 +73,6 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           name: Windows v${{ steps.ver.outputs.version }}
-          body: Pre-release: Windows MihomoTray v${{ steps.ver.outputs.version }} (built by GitHub Actions).
+          body: "Pre-release: Windows MihomoTray v${{ steps.ver.outputs.version }} (built by GitHub Actions)."
           tag_name: ${{ github.ref_name }}
           files: windows/${{ env.ZIP }}

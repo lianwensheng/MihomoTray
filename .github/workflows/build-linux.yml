@@ -111,7 +111,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           name: Linux v${{ steps.ver.outputs.version }}
-          body: Pre-release: Linux MihomoTray v${{ steps.ver.outputs.version }} Qt AppImage + GTK deb/rpm/tar.gz (built by GitHub Actions).
+          body: "Pre-release: Linux MihomoTray v${{ steps.ver.outputs.version }} Qt AppImage + GTK deb/rpm/tar.gz (built by GitHub Actions)."
           tag_name: ${{ github.ref_name }}
           files: |
             linux/dist/MihomoTray_linux_qt_${{ steps.ver.outputs.version }}_x86_64.AppImage

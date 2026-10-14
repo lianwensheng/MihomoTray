@@ -1,0 +1,77 @@
+name: build-win
+
+on:
+  push:
+    branches: [main]
+    tags: ["win-v*"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' || github.event_name == 'pull_request'
+    outputs:
+      windows: ${{ steps.filter.outputs.windows }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            windows:
+              - 'windows/**'
+              - '.github/workflows/build-win.yml'
+
+  build:
+    needs: changes
+    if: >
+      always() && !cancelled() && (
+        github.event_name == 'workflow_dispatch' ||
+        startsWith(github.ref, 'refs/tags/win-v') ||
+        needs.changes.outputs.windows == 'true'
+      )
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: windows
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Read version
+        id: ver
+        shell: pwsh
+        run: |
+          $m = Select-String -Path src/AssemblyInfo.cs -Pattern 'AssemblyInformationalVersion\("([^"]+)"\)'
+          $v = $m.Matches[0].Groups[1].Value
+          "version=$v" >> $env:GITHUB_OUTPUT
+          echo "Version $v"
+
+      - name: Build (build.bat)
+        shell: cmd
+        env:
+          CI: "true"
+        run: build.bat
+
+      - name: Package
+        shell: pwsh
+        run: |
+          $zip = "MihomoTray_windows_${{ steps.ver.outputs.version }}.zip"
+          Compress-Archive -Path dist/* -DestinationPath $zip -Force
+          "ZIP=$zip" >> $env:GITHUB_ENV
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: MihomoTray_windows_${{ steps.ver.outputs.version }}
+          path: windows/${{ env.ZIP }}
+
+      - name: Release
+        if: startsWith(github.ref, 'refs/tags/win-v')
+        uses: softprops/action-gh-release@v2
+        with:
+          name: MihomoTray_windows_${{ steps.ver.outputs.version }}
+          tag_name: ${{ github.ref_name }}
+          files: windows/${{ env.ZIP }}

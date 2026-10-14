@@ -1,0 +1,13 @@
+**/dist/
+**/appimage/
+**/__pycache__/
+**/*.pyc
+**/.DS_Store
+windows/bin/
+windows/obj/
+*.user
+*.suo
+**/*.exe
+**/*.pdb
+**/*.dll
+!linux/tools/appimagetool-x86_64.AppImage

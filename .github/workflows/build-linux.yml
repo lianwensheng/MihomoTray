@@ -1,0 +1,119 @@
+name: build-linux
+
+on:
+  push:
+    branches: [main]
+    tags: ["linux-v*"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' || github.event_name == 'pull_request'
+    outputs:
+      linux: ${{ steps.filter.outputs.linux }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            linux:
+              - 'linux/**'
+              - '.github/workflows/build-linux.yml'
+
+  build:
+    needs: changes
+    if: >
+      always() && !cancelled() && (
+        github.event_name == 'workflow_dispatch' ||
+        startsWith(github.ref, 'refs/tags/linux-v') ||
+        needs.changes.outputs.linux == 'true'
+      )
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: linux
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Read version
+        id: ver
+        run: |
+          v=$(sed -n 's/^__version__ = "\(.*\)"/\1/p' mihomotray/__init__.py)
+          echo "version=$v" >> "$GITHUB_OUTPUT"
+          echo "Version $v"
+
+      - name: System libraries
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libegl1 libgl1 libxkbcommon0 libfontconfig1 libdbus-1-3 file \
+            libfuse2t64 || sudo apt-get install -y \
+            libegl1 libgl1 libxkbcommon0 libfontconfig1 libdbus-1-3 file libfuse2
+          sudo apt-get install -y \
+            python3-gi gir1.2-gtk-3.0 gir1.2-ayatanaappindicator3-0.1 gir1.2-notify-0.7 \
+            libayatana-appindicator3-1 rpm xvfb curl
+
+      - name: Test
+        env:
+          QT_QPA_PLATFORM: offscreen
+          MIHOMOTRAY_SKIP_TRAY_WAIT: "1"
+        run: |
+          python -m pip install "PySide6-Essentials>=6.5" Pillow
+          xvfb-run -a python -m unittest discover -s test -v
+
+      - name: Build Qt + GTK (build.sh all)
+        run: |
+          python -m pip install python-appimage
+          chmod +x build.sh tools/*.py tools/*.sh 2>/dev/null || chmod +x build.sh tools/*.py
+          ./build.sh all
+
+      - name: List artifacts
+        run: |
+          v=${{ steps.ver.outputs.version }}
+          ls -lh dist/
+          test -f "dist/MihomoTray_linux_qt_${v}_x86_64.AppImage"
+          test -f "dist/MihomoTray_linux_${v}.deb"
+          test -f "dist/MihomoTray_linux_${v}.rpm"
+          test -f "dist/MihomoTray_linux_gtk_${v}.tar.gz"
+
+      - name: Smoke Qt AppImage (offscreen)
+        env:
+          QT_QPA_PLATFORM: offscreen
+        run: |
+          v=${{ steps.ver.outputs.version }}
+          chmod +x "dist/MihomoTray_linux_qt_${v}_x86_64.AppImage"
+          APPIMAGE_EXTRACT_AND_RUN=1 timeout 20 \
+            "dist/MihomoTray_linux_qt_${v}_x86_64.AppImage" --help 2>/dev/null || true
+          APPIMAGE_EXTRACT_AND_RUN=1 \
+            "dist/MihomoTray_linux_qt_${v}_x86_64.AppImage" --appimage-help >/dev/null
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: MihomoTray_linux_${{ steps.ver.outputs.version }}
+          path: |
+            linux/dist/MihomoTray_linux_qt_${{ steps.ver.outputs.version }}_x86_64.AppImage
+            linux/dist/MihomoTray_linux_${{ steps.ver.outputs.version }}.deb
+            linux/dist/MihomoTray_linux_${{ steps.ver.outputs.version }}.rpm
+            linux/dist/MihomoTray_linux_gtk_${{ steps.ver.outputs.version }}.tar.gz
+
+      - name: Release
+        if: startsWith(github.ref, 'refs/tags/linux-v')
+        uses: softprops/action-gh-release@v2
+        with:
+          name: MihomoTray_linux_${{ steps.ver.outputs.version }}
+          tag_name: ${{ github.ref_name }}
+          files: |
+            linux/dist/MihomoTray_linux_qt_${{ steps.ver.outputs.version }}_x86_64.AppImage
+            linux/dist/MihomoTray_linux_${{ steps.ver.outputs.version }}.deb
+            linux/dist/MihomoTray_linux_${{ steps.ver.outputs.version }}.rpm
+            linux/dist/MihomoTray_linux_gtk_${{ steps.ver.outputs.version }}.tar.gz

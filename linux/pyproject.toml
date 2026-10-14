@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mihomotray"
+version = "1.0.3"
+description = "Tray icon that shows and switches the mihomo proxy mode"
+requires-python = ">=3.9"
+dependencies = []
+
+[project.optional-dependencies]
+qt = ["PySide6-Essentials>=6.5"]
+
+[project.scripts]
+mihomotray = "mihomotray.__main__:main"
+
+[tool.setuptools]
+packages = ["mihomotray"]
+
+[tool.setuptools.package-data]
+mihomotray = ["icons/*.png"]

@@ -1,0 +1,82 @@
+name: build-mac
+
+on:
+  push:
+    branches: [main]
+    tags: ["mac-v*"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' || github.event_name == 'pull_request'
+    outputs:
+      macos: ${{ steps.filter.outputs.macos }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            macos:
+              - 'macos/**'
+              - '.github/workflows/build-mac.yml'
+
+  build:
+    needs: changes
+    if: >
+      always() && !cancelled() && (
+        github.event_name == 'workflow_dispatch' ||
+        startsWith(github.ref, 'refs/tags/mac-v') ||
+        needs.changes.outputs.macos == 'true'
+      )
+    runs-on: macos-14
+    defaults:
+      run:
+        working-directory: macos
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Read version
+        id: ver
+        run: |
+          v=$(/usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" Resources/Info.plist)
+          echo "version=$v" >> "$GITHUB_OUTPUT"
+          echo "Version $v"
+
+      - name: Build both architectures (build.sh)
+        run: |
+          chmod +x build.sh
+          ./build.sh both
+          echo "=== arm64 ==="
+          lipo -archs dist/arm64/MihomoTray.app/Contents/MacOS/MihomoTray
+          echo "=== x86_64 ==="
+          lipo -archs dist/x86_64/MihomoTray.app/Contents/MacOS/MihomoTray
+
+      - name: Package
+        run: |
+          v=${{ steps.ver.outputs.version }}
+          ditto -c -k --keepParent dist/arm64 "MihomoTray_macos_${v}_AppleSilicon.zip"
+          ditto -c -k --keepParent dist/x86_64 "MihomoTray_macos_${v}_Intel.zip"
+          ls -lh *.zip
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: MihomoTray_macos_${{ steps.ver.outputs.version }}
+          path: |
+            macos/MihomoTray_macos_${{ steps.ver.outputs.version }}_AppleSilicon.zip
+            macos/MihomoTray_macos_${{ steps.ver.outputs.version }}_Intel.zip
+
+      - name: Release
+        if: startsWith(github.ref, 'refs/tags/mac-v')
+        uses: softprops/action-gh-release@v2
+        with:
+          name: MihomoTray_macos_${{ steps.ver.outputs.version }}
+          tag_name: ${{ github.ref_name }}
+          files: |
+            macos/MihomoTray_macos_${{ steps.ver.outputs.version }}_AppleSilicon.zip
+            macos/MihomoTray_macos_${{ steps.ver.outputs.version }}_Intel.zip

@@ -8,8 +8,8 @@ Windows、macOS、Linux 各用原生代码，**版本号各自独立**，合在�
 
 | 平台 | 目录 | 版本 | 产物 |
 |------|------|------|------|
-| Windows | [windows/](windows/) | 2.1.8 | `MihomoTray_windows_2.1.8.zip` |
-| macOS | [macos/](macos/) | 1.0.5 | `MihomoTray_macos_1.0.5_AppleSilicon.zip` / `_Intel.zip` |
+| Windows | [windows/](windows/) | 2.1.8 | MihomoTray_windows_2.1.8.zip |
+| macOS | [macos/](macos/) | 1.0.5 | MihomoTray_macos_1.0.5_AppleSilicon.zip / _Intel.zip |
 | Linux | [linux/](linux/) | 1.0.3 | Qt AppImage + GTK 的 `.deb` / `.rpm` / `.tar.gz` |
 
 图标与 Windows 版一致：规则 = 原色猫、全局 = 红、直连 = 绿、未连接 = 灰。

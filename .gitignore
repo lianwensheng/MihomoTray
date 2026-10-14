@@ -1,5 +1,7 @@
 **/dist/
 **/appimage/
+!linux/appimage/
+!linux/appimage/**
 **/__pycache__/
 **/*.pyc
 **/.DS_Store

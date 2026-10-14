@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=MihomoTray
+Comment=mihomo proxy mode tray icon
+Exec=mihomotray
+Icon=mihomotray
+Terminal=false
+Categories=Network;Utility;

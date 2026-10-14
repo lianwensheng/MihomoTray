@@ -47,9 +47,9 @@ cd linux
 
 | 平台 | 标签示例 | Release 名称 |
 |------|----------|--------------|
-| Windows | `win-v2.1.8` | MihomoTray_windows_2.1.8 |
-| macOS | `mac-v1.0.5` | MihomoTray_macos_1.0.5 |
-| Linux | `linux-v1.0.3` | MihomoTray_linux_1.0.3 |
+| Windows | `win-v2.1.8` | Windows v2.1.8 |
+| macOS | `mac-v1.0.5` | Macos v1.0.5 |
+| Linux | `linux-v1.0.3` | Linux v1.0.3 |
 
 ```bash
 git tag win-v2.1.8

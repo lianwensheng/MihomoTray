@@ -53,6 +53,23 @@ def TipMode(): return _("Mode : ", "模式 : ")
 def TipTun(): return _("TUN Mode : ", "虚拟网卡 : ")
 def TipLog(): return _("Log Level : ", "日志级别 : ")
 def Disconnected(): return _("Disconnected", "未连接")
+def StatusCantConnect(): return _("Can't connect", "无法连接")
+def StatusAuthFailed(): return _("Auth failed", "鉴权失败")
+def StatusTimeout(): return _("Timed out", "连接超时")
+
+def ShortStatus(err):
+    """Map client exception to short tray/menu status."""
+    if err is None:
+        return Disconnected()
+    m = str(err)
+    if m == AuthFailed():
+        return StatusAuthFailed()
+    if m == ControllerTimeout():
+        return StatusTimeout()
+    if m == CantConnect():
+        return StatusCantConnect()
+    return Disconnected()
+
 def On(): return _("On", "开启")
 def Off(): return _("Off", "关闭")
 Dash = "—"

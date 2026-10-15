@@ -8,13 +8,21 @@ Windows、macOS、Linux 各用原生代码，**版本号各自独立**，合在�
 
 | 平台 | 目录 | 版本 | 产物 |
 |------|------|------|------|
-| Windows | [windows/](windows/) | 2.1.8 | MihomoTray_windows_2.1.8.zip |
-| macOS | [macos/](macos/) | 1.0.5 | MihomoTray_macos_1.0.5_AppleSilicon.zip / _Intel.zip |
+| Windows | [windows/](windows/) | 2.1.8 | `MihomoTray_windows_2.1.8.zip` |
+| macOS | [macos/](macos/) | 1.0.5 | `MihomoTray_macos_1.0.5_AppleSilicon.zip` / `_Intel.zip` |
 | Linux | [linux/](linux/) | 1.0.3 | Qt AppImage + GTK 的 `.deb` / `.rpm` / `.tar.gz` |
 
 图标与 Windows 版一致：规则 = 原色猫、全局 = 红、直连 = 绿、未连接 = 灰。
 
+连不上控制器时图标仍为灰色；悬停提示与菜单顶部灰字会区分 **无法连接** / **鉴权失败** / **连接超时**（不再一律「未连接」）。Linux GTK 无悬停时主要看菜单灰字。
+
 更细的安装、配置、菜单说明见各目录里的 `README.md`（中文）和 `README_en`（英文）。
+
+## 配置
+
+首次运行会生成 `config.ini`（Windows / macOS 在应用旁 `Data/`，Linux 在 `~/.config/MihomoTray/`）。  
+默认模板按小节空行排版，注释里说明如何对照 mihomo 自己的 external-controller 填写 `controller` / `secret` / `panel_url`。  
+`theme` 仅 Windows 有；改完配置后需重启本小工具。
 
 ## 本地构建
 

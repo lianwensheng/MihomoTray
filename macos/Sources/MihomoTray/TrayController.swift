@@ -12,6 +12,7 @@ final class TrayController: NSObject {
     private var icons: [String: NSImage] = [:]
     private var mode: String?
     private var connected = false
+    private var statusText = Loc.disconnected
     private var disposed = false
     private var polling = false
     private var switching = 0
@@ -116,9 +117,23 @@ final class TrayController: NSObject {
         openPanel()
     }
 
+
+    private static func shortStatus(_ err: Error?) -> String {
+        guard let err = err else { return Loc.disconnected }
+        let m = err.localizedDescription
+        if m == Loc.authFailed { return Loc.statusAuthFailed }
+        if m == Loc.controllerTimeout { return Loc.statusTimeout }
+        if m == Loc.cantConnect { return Loc.statusCantConnect }
+        return Loc.disconnected
+    }
+
     private func rebuildMenu() {
         menu.removeAllItems()
         menu.autoenablesItems = false
+
+        let status = menu.addItem(withTitle: statusText, action: nil, keyEquivalent: "")
+        status.isEnabled = false
+        menu.addItem(.separator())
 
         let dash = menu.addItem(withTitle: Loc.openPanel, action: #selector(openPanel), keyEquivalent: "")
         dash.target = self
@@ -165,12 +180,14 @@ final class TrayController: NSObject {
         guard let btn = statusItem.button else { return }
         if err != nil || st == nil {
             connected = false
+            statusText = Self.shortStatus(err)
             btn.image = icons["offline"]
-            btn.toolTip = TrayTip.text(connected: false, mode: nil, tunEnabled: false, logLevel: nil)
+            btn.toolTip = statusText
         } else if let st = st {
             connected = true
             mode = st.mode
             let key = Self.modes.contains(st.mode) ? st.mode : "rule"
+            statusText = key == "rule" ? Loc.modeRule : key == "global" ? Loc.modeGlobal : Loc.modeDirect
             btn.image = icons[key]
             btn.toolTip = TrayTip.text(connected: true, mode: st.mode, tunEnabled: st.tunEnabled, logLevel: st.logLevel)
         }

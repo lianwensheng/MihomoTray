@@ -35,6 +35,10 @@ enum Loc {
     static var tipTun: String { en ? "TUN Mode : " : "虚拟网卡 : " }
     static var tipLog: String { en ? "Log Level : " : "日志级别 : " }
     static var disconnected: String { en ? "Disconnected" : "未连接" }
+    /// Short tray/menu status (hover + grey menu line).
+    static var statusCantConnect: String { en ? "Can't connect" : "无法连接" }
+    static var statusAuthFailed: String { en ? "Auth failed" : "鉴权失败" }
+    static var statusTimeout: String { en ? "Timed out" : "连接超时" }
     static var on: String { en ? "On" : "开启" }
     static var off: String { en ? "Off" : "关闭" }
     static var dash: String { "—" }

@@ -23,37 +23,47 @@ final class AppConfig {
     }
 
     static let defaultIni = """
-; MihomoTray 配置文件（修改后重启小工具生效）
-; MihomoTray config (restart the tray app after editing)
+; MihomoTray 配置文件（修改后重启 MihomoTray 生效）
+; MihomoTray config (restart MihomoTray after editing)
+
 [mihomo]
-; external-controller 地址
-; external-controller address
+; external-controller 地址，自定义地址在 mihomo 配置里查询并更换
+; external-controller address — look it up in the mihomo config
 controller = 127.0.0.1:9090
+
 ; external-controller 的 secret，没有就留空（请只用 ASCII 字母、数字和符号）
 ; secret for external-controller (leave empty if none; ASCII letters/digits/symbols only)
 secret = 
-; 点击“打开面板”时打开的网址
-; URL opened by Dashboard / left-click
+
+; 点击“打开面板”时打开的网址，自定义网址在 mihomo 配置里查询并更换
+; URL opened by Dashboard / left-click — look it up in the mihomo config
 panel_url = http://127.0.0.1:9090/ui/
-; 点击“切换程序”时启动的程序（.app / 可执行文件 / 脚本），留空则该菜单项变灰
-; Program launched by Open App (.app / binary / script); leave empty to gray out the item
-; 支持 ~、环境变量、$HOME、相对路径（相对本应用所在文件夹）
-; Paths may use ~, env vars, $HOME, or be relative to this app's folder
+
+; 点击“切换程序”时启动的程序（.app / 可执行文件），留空则该菜单项变灰
+; Program launched by Open App (.app / binary); leave empty to gray out the item
+; 支持 ~、环境变量、相对路径（相对本应用所在文件夹）
+; Paths may use ~, env vars, or be relative to this app's folder
+; switch_program = /Applications/SomeClient.app
+; switch_program = ~/Applications/SomeClient.app
 switch_program = 
+
 ; 启动上面程序时附带的命令行参数，一般留空
 ; Extra command-line args for the program above (usually empty)
 switch_program_args = 
+
 ; 轮询当前模式的间隔（秒）
 ; Poll interval for current mode (seconds)
 poll_interval = 3
-; 切换模式后是否断开现有连接
-; Close existing connections after switching mode
+
+; 切换模式后是否断开现有连接，让已建立的连接也立即按新模式走（设为 false 则只影响新连接）
+; Close existing connections after switching mode (false = only new connections use the new mode)
 close_connections = true
 
 [ui]
 ; 界面语言：system（跟随系统）/ zh（中文）/ en（英文）
 ; UI language: system (follow OS) / zh (Chinese) / en (English)
 language = system
+
 ; 开机自启：true（开启）/ false（关闭，默认）；每次启动时按这里同步系统设置
 ; Start at login: true / false (default); synced to the system on every start
 autostart = false

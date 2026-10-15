@@ -36,6 +36,10 @@ namespace MihomoTray
         public static string TipTun { get { return En ? "TUN Mode : " : "虚拟网卡 : "; } }
         public static string TipLog { get { return En ? "Log Level : " : "日志级别 : "; } }
         public static string Disconnected { get { return En ? "Disconnected" : "未连接"; } }
+        /// <summary>托盘悬停 / 菜单灰字用的短状态（NotifyIcon.Text ≤ 63）。</summary>
+        public static string StatusCantConnect { get { return En ? "Can't connect" : "无法连接"; } }
+        public static string StatusAuthFailed { get { return En ? "Auth failed" : "鉴权失败"; } }
+        public static string StatusTimeout { get { return En ? "Timed out" : "连接超时"; } }
         public static string On { get { return En ? "On" : "开启"; } }
         public static string Off { get { return En ? "Off" : "关闭"; } }
         public static string Dash { get { return "—"; } }

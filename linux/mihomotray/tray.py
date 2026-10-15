@@ -60,6 +60,9 @@ class TrayApp(QObject):
 
         self.menu = QMenu()
         self.menu.aboutToShow.connect(self.poll)
+        self.status_text = loc.Disconnected()
+        self.act_status = QAction(self.status_text, self.menu)
+        self.act_status.setEnabled(False)
         self.act_panel = QAction(loc.OpenPanel(), self.menu)
         self.act_panel.triggered.connect(self.open_panel)
         self.act_app = QAction(loc.SwitchProgram(), self.menu)
@@ -75,6 +78,8 @@ class TrayApp(QObject):
             self.act_modes[m] = a
         self.act_exit = QAction(loc.Exit(), self.menu)
         self.act_exit.triggered.connect(self.quit)
+        self.menu.addAction(self.act_status)
+        self.menu.addSeparator()
         self.menu.addAction(self.act_panel)
         self.menu.addAction(self.act_app)
         self.menu.addSeparator()
@@ -149,13 +154,19 @@ class TrayApp(QObject):
             return
         if err is not None:
             self.connected = False
+            self.status_text = loc.ShortStatus(err)
             self.set_icon("offline")
-            self.set_tip(tray_tip(False, None, False, None))
+            self.set_tip(self.status_text)
         else:
             self.connected = True
             self.mode = st.mode
-            self.set_icon(st.mode if st.mode in MODES else "rule")
+            key = st.mode if st.mode in MODES else "rule"
+            self.status_text = (
+                loc.ModeRule() if key == "rule" else loc.ModeGlobal() if key == "global" else loc.ModeDirect()
+            )
+            self.set_icon(key)
             self.set_tip(tray_tip(True, st.mode, st.tun_enabled, st.log_level))
+        self.act_status.setText(self.status_text)
         for m, a in self.act_modes.items():
             a.setEnabled(self.connected)
             a.setChecked(self.connected and self.mode == m)

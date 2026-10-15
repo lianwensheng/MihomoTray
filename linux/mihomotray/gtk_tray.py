@@ -74,6 +74,9 @@ class GtkTrayApp:
             self.indicator.set_icon(self.icon_paths["offline"])
 
         self.menu = Gtk.Menu()
+        self.status_text = loc.Disconnected()
+        self.act_status = Gtk.MenuItem(label=self.status_text)
+        self.act_status.set_sensitive(False)
         self.act_panel = Gtk.MenuItem(label=loc.OpenPanel())
         self.act_panel.connect("activate", lambda *_: self.open_panel())
         self.act_app = Gtk.MenuItem(label=loc.SwitchProgram())
@@ -91,6 +94,8 @@ class GtkTrayApp:
         self.act_exit = Gtk.MenuItem(label=loc.Exit())
         self.act_exit.connect("activate", lambda *_: self.quit())
 
+        self.menu.append(self.act_status)
+        self.menu.append(Gtk.SeparatorMenuItem())
         for w in (self.act_panel, self.act_app):
             self.menu.append(w)
         self.menu.append(Gtk.SeparatorMenuItem())
@@ -158,11 +163,20 @@ class GtkTrayApp:
             return
         if err is not None:
             self.connected = False
+            self.status_text = loc.ShortStatus(err)
             self.set_icon("offline")
         else:
             self.connected = True
             self.mode = st.mode
-            self.set_icon(st.mode if st.mode in MODES else "rule")
+            key = st.mode if st.mode in MODES else "rule"
+            self.status_text = (
+                loc.ModeRule() if key == "rule" else loc.ModeGlobal() if key == "global" else loc.ModeDirect()
+            )
+            self.set_icon(key)
+        try:
+            self.act_status.set_label(self.status_text)
+        except Exception:
+            pass
         for m, a in self.act_modes.items():
             a.set_sensitive(self.connected)
             a.handler_block(self._mode_handler_ids[m])

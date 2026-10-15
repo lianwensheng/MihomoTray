@@ -23,6 +23,7 @@ namespace MihomoTray
         private int _polling;          // 0/1，防止请求堆积
         private string _mode;          // 最近一次读到的模式
         private bool _connected;
+        private string _statusText = Loc.Disconnected;  // 悬停 / 菜单灰字短状态
         private bool _disposed;        // Quit() 之后为 true，晚到的回调直接忽略
         private int _switchSeq;        // 每次切换模式 +1，只采用最新一次切换的结果
         private int _switching;        // 正在切换时丢弃轮询结果，避免旧模式把新模式覆盖回去
@@ -143,6 +144,8 @@ namespace MihomoTray
         private List<FlClashMenu.Entry> BuildMenuEntries()
         {
             var list = new List<FlClashMenu.Entry>();
+            list.Add(new FlClashMenu.Entry { Text = _statusText, Enabled = false });
+            list.Add(new FlClashMenu.Entry());
             list.Add(new FlClashMenu.Entry { Text = Loc.OpenPanel, OnClick = OpenPanel });
             list.Add(new FlClashMenu.Entry { Text = Loc.SwitchProgram, Enabled = _cfg.HasSwitchProgram, OnClick = LaunchSwitchProgram });
             list.Add(new FlClashMenu.Entry());
@@ -188,20 +191,33 @@ namespace MihomoTray
             if (err != null)
             {
                 _connected = false;
+                _statusText = ShortStatus(err);
                 _tray.Icon = _icons["offline"];
-                SetTip(TrayTip.For(false, null, false, null));
+                SetTip(_statusText);
             }
             else
             {
                 _connected = true;
                 _mode = mode;
                 string key = (mode == "rule" || mode == "global" || mode == "direct") ? mode : "rule";
+                _statusText = key == "rule" ? Loc.ModeRule : key == "global" ? Loc.ModeGlobal : Loc.ModeDirect;
                 _tray.Icon = _icons[key];
                 SetTip(TrayTip.For(true, st.Mode, st.TunEnabled, st.LogLevel));
             }
         }
 
-        private void SetTip(string t)
+        /// <summary>轮询失败时的短状态文案（悬停 ≤63 字 / 菜单灰字）。</summary>
+        private static string ShortStatus(Exception err)
+        {
+            if (err == null) return Loc.Disconnected;
+            string m = err.Message ?? "";
+            if (m == Loc.AuthFailed) return Loc.StatusAuthFailed;
+            if (m == Loc.ControllerTimeout) return Loc.StatusTimeout;
+            if (m == Loc.CantConnect) return Loc.StatusCantConnect;
+            return Loc.Disconnected;
+        }
+
+                private void SetTip(string t)
         {
             if (_disposed) return;
             if (t.Length > 63) t = t.Substring(0, 63);

@@ -25,33 +25,38 @@ namespace MihomoTray
         public readonly List<string> Errors = new List<string>();
 
         public const string DefaultIni =
-"; MihomoTray 配置文件（修改后重启小工具生效）\r\n" +
-"; MihomoTray config (restart the tray app after editing)\r\n" +
+"; MihomoTray 配置文件（修改后重启 MihomoTray 生效）\r\n" +
+"; MihomoTray config (restart MihomoTray after editing)\r\n" +
+"\r\n" +
 "[mihomo]\r\n" +
-"; external-controller 地址\r\n" +
-"; external-controller address\r\n" +
+"; external-controller 地址，自定义地址在 mihomo 配置里查询并更换\r\n" +
+"; external-controller address — look it up in the mihomo config\r\n" +
 "controller = 127.0.0.1:9090\r\n" +
+"\r\n" +
 "; external-controller 的 secret，没有就留空（请只用 ASCII 字母、数字和符号）\r\n" +
 "; secret for external-controller (leave empty if none; ASCII letters/digits/symbols only)\r\n" +
 "secret = \r\n" +
-"; 点击“打开面板”时打开的网址\r\n" +
-"; URL opened by Dashboard / left-click\r\n" +
+"\r\n" +
+"; 点击“打开面板”时打开的网址，自定义网址在 mihomo 配置里查询并更换\r\n" +
+"; URL opened by Dashboard / left-click — look it up in the mihomo config\r\n" +
 "panel_url = http://127.0.0.1:9090/ui/\r\n" +
+"\r\n" +
 "; 点击“切换程序”时启动的程序（通常是某个 mihomo 内核图形客户端的主程序，.exe 或 .lnk 快捷方式都行），留空则该菜单项变灰\r\n" +
 "; Program launched by Open App (usually a mihomo GUI client .exe or .lnk); leave empty to gray out the item\r\n" +
 "; 支持带空格/带引号的路径、环境变量（如 %LOCALAPPDATA%）、相对路径（相对本小工具 exe 所在文件夹）\r\n" +
 "; Paths may contain spaces/quotes, env vars (e.g. %LOCALAPPDATA%), or be relative to this app's folder\r\n" +
-"; 例：switch_program = C:\\Program Files\\FlClash\\FlClash.exe\r\n" +
-"; Example: switch_program = C:\\Program Files\\FlClash\\FlClash.exe\r\n" +
-";     switch_program = %LOCALAPPDATA%\\Programs\\某客户端\\某客户端.exe\r\n" +
-";     switch_program = %LOCALAPPDATA%\\Programs\\SomeClient\\SomeClient.exe\r\n" +
+"; switch_program = C:\\Program Files\\SomeClient\\SomeClient.exe\r\n" +
+"; switch_program = %LOCALAPPDATA%\\Programs\\SomeClient\\SomeClient.exe\r\n" +
 "switch_program = \r\n" +
+"\r\n" +
 "; 启动上面程序时附带的命令行参数，一般留空\r\n" +
 "; Extra command-line args for the program above (usually empty)\r\n" +
 "switch_program_args = \r\n" +
+"\r\n" +
 "; 轮询当前模式的间隔（秒）\r\n" +
 "; Poll interval for current mode (seconds)\r\n" +
 "poll_interval = 3\r\n" +
+"\r\n" +
 "; 切换模式后是否断开现有连接，让已建立的连接也立即按新模式走（设为 false 则只影响新连接）\r\n" +
 "; Close existing connections after switching mode (false = only new connections use the new mode)\r\n" +
 "close_connections = true\r\n" +
@@ -60,11 +65,13 @@ namespace MihomoTray
 "; 界面语言：system（跟随系统）/ zh（中文）/ en（英文）\r\n" +
 "; UI language: system (follow OS) / zh (Chinese) / en (English)\r\n" +
 "language = system\r\n" +
+"\r\n" +
 "; 菜单主题：system（跟随系统）/ light（浅色）/ dark（深色）\r\n" +
 "; Menu theme: system (follow OS) / light / dark\r\n" +
 "; light 与 FlClash 原版一致（原版不启用深色菜单，始终是系统浅色菜单）\r\n" +
 "; light matches FlClash (native menu stays light even if the OS is dark)\r\n" +
 "theme = {theme}\r\n" +
+"\r\n" +
 "; 开机自启：true（开启）/ false（关闭，默认）；每次启动时按这里同步系统设置\r\n" +
 "; Start with Windows: true / false (default); synced to the system on every start\r\n" +
 "autostart = false\r\n";

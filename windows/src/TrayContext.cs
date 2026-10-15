@@ -259,11 +259,19 @@ namespace MihomoTray
 
         private void OpenPanel()
         {
+            MaybeShowPanelTip();
             string url = _cfg.PanelUrl;
             StartShell(new ProcessStartInfo(url) { UseShellExecute = true }, delegate(Exception ex)
             {
                 Warn(Loc.CantOpenPanel, ex.Message + "\n" + url);
             });
+        }
+
+        /// <summary>首次打开面板：气泡提示实际 panel_url，旁路 .panel_tip_shown 只提示一次（菜单/左键共用）。</summary>
+        private void MaybeShowPanelTip()
+        {
+            if (!AppConfig.TryClaimPanelTip()) return;
+            Info(Loc.OpenPanel, Loc.PanelTipBody(_cfg.PanelUrl));
         }
 
         /// <summary>启动 config.ini 里 switch_program 指定的程序（ShellExecute，.exe / .lnk 都可以）。</summary>
@@ -316,6 +324,13 @@ namespace MihomoTray
             if (_disposed) return;
             if (text.Length > 250) text = text.Substring(0, 247) + "...";
             _tray.ShowBalloonTip(4000, title, text, ToolTipIcon.Warning);
+        }
+
+        private void Info(string title, string text)
+        {
+            if (_disposed) return;
+            if (text.Length > 250) text = text.Substring(0, 247) + "...";
+            _tray.ShowBalloonTip(4000, title, text, ToolTipIcon.Info);
         }
 
         /// <summary>每一步单独 try，无论哪一步出错最后都一定 ExitThread，进程不会留在后台。</summary>

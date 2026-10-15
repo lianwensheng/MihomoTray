@@ -64,6 +64,25 @@ def ini_path():
     return os.path.join(data_dir(), "config.ini")
 
 
+def panel_tip_marker_path():
+    """Sidecar next to config.ini for one-time first-open panel tip (not written into ini)."""
+    return os.path.join(data_dir(), ".panel_tip_shown")
+
+
+def try_claim_panel_tip():
+    """Return True once: create marker; False if already shown or cannot write."""
+    path = panel_tip_marker_path()
+    try:
+        if os.path.isfile(path):
+            return False
+        os.makedirs(data_dir(), exist_ok=True)
+        with open(path, "w", encoding="utf-8") as f:
+            f.write("1\n")
+        return True
+    except OSError:
+        return False
+
+
 def icons_dir():
     return os.path.join(data_dir(), "Icons")
 

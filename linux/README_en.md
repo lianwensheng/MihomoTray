@@ -19,6 +19,8 @@ Grey icon when offline. Hover (if any) and the grey menu line show:
 
 When connected, the grey line shows the current mode. No spammy desktop notifications.
 
+First open of the dashboard shows a tip with the actual `panel_url` (sidecar `~/.config/MihomoTray/.panel_tip_shown`, once only).
+
 ## Config
 
 `~/.config/MihomoTray/config.ini` on first run. Keys: `controller`, `secret`, `panel_url`, `switch_program`, `poll_interval`, `close_connections`, `language`, `autostart` (no `theme`).

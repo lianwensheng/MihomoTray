@@ -71,6 +71,18 @@ class LocTest(unittest.TestCase):
                       loc.CantOpenApp(), loc.AutostartFailed(), loc.Disconnected(), loc.CantConnect()):
                 self.assertFalse(s.endswith((".", "。")), s)
 
+    def test_panel_tip_body(self):
+        loc.apply("zh")
+        self.assertEqual(loc.PanelTipBody("http://127.0.0.1:9090/ui/"),
+                         "即将打开 http://127.0.0.1:9090/ui/\n可在 config.ini 的 panel_url 修改")
+        loc.apply("en")
+        self.assertEqual(loc.PanelTipBody("http://example/ui/"),
+                         "Opening http://example/ui/\nChange panel_url in config.ini")
+        for lang in ("zh", "en"):
+            loc.apply(lang)
+            s = loc.PanelTipBody("http://x/")
+            self.assertFalse(s.endswith((".", "。")), s)
+
     def test_windows_loc_text(self):
         """逐条比对 Windows 版 Loc.cs 里同名文案（合仓 windows/ 或旧旁挂目录）。"""
         candidates = [
@@ -162,6 +174,14 @@ class ConfigTest(unittest.TestCase):
         open(p, "w").write("secret = ro\n"); os.chmod(p, 0o444)
         c = config.load(); self.assertEqual(c.secret, "ro"); self.assertEqual(open(p).read(), "secret = ro\n")
         os.chmod(p, 0o644); os.remove(p)
+
+    def test_panel_tip_claim(self):
+        m = config.panel_tip_marker_path()
+        if os.path.exists(m): os.remove(m)
+        self.assertTrue(config.try_claim_panel_tip())
+        self.assertTrue(os.path.isfile(m))
+        self.assertFalse(config.try_claim_panel_tip())
+        os.remove(m)
 
 
 class ClientTest(Base):

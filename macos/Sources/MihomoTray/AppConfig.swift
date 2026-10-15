@@ -87,6 +87,26 @@ autostart = false
     static var iconsDir: String { (dataDir as NSString).appendingPathComponent("Icons") }
     static var iniPath: String { (dataDir as NSString).appendingPathComponent("config.ini") }
 
+    /// Sidecar next to config.ini for the one-time first-open panel tip (not written into the ini).
+    static var panelTipMarkerPath: String {
+        let dir = FileManager.default.fileExists(atPath: dataDir) ? dataDir : appDir
+        return (dir as NSString).appendingPathComponent(".panel_tip_shown")
+    }
+
+    /// Returns true once: creates the marker; false if already shown or cannot write.
+    static func tryClaimPanelTip() -> Bool {
+        let path = panelTipMarkerPath
+        if FileManager.default.fileExists(atPath: path) { return false }
+        do {
+            let dir = (path as NSString).deletingLastPathComponent
+            try FileManager.default.createDirectory(atPath: dir, withIntermediateDirectories: true)
+            try "1".write(toFile: path, atomically: true, encoding: .utf8)
+            return true
+        } catch {
+            return false
+        }
+    }
+
     @discardableResult
     static func prepareDataDir() -> Bool {
         do {

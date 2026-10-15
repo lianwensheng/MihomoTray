@@ -97,6 +97,27 @@ namespace MihomoTray
             get { return Path.Combine(DataDir, "config.ini"); }
         }
 
+        /// <summary>config.ini 旁的一次性标记：首次「打开面板」提示用，不写入用户 ini。</summary>
+        public static string PanelTipMarkerPath
+        {
+            get { return Path.Combine(Directory.Exists(DataDir) ? DataDir : ExeDir, ".panel_tip_shown"); }
+        }
+
+        /// <summary>若尚未提示过则写入标记并返回 true；已提示或无法写入则返回 false（避免反复弹）。</summary>
+        public static bool TryClaimPanelTip()
+        {
+            try
+            {
+                string path = PanelTipMarkerPath;
+                if (File.Exists(path)) return false;
+                string dir = Path.GetDirectoryName(path);
+                if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir)) Directory.CreateDirectory(dir);
+                File.WriteAllText(path, "1");
+                return true;
+            }
+            catch { return false; }
+        }
+
         /// <summary>建好 Data 文件夹；旧版本放在 exe 旁边的 config.ini 挪进 Data（Data 里已有就不动）。失败返回 false。</summary>
         public static bool PrepareDataDir()
         {

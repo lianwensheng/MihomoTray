@@ -231,6 +231,7 @@ final class TrayController: NSObject {
     }
 
     @objc func openPanel() {
+        maybeShowPanelTip()
         guard let url = URL(string: cfg.panelUrl) else {
             warn(Loc.cantOpenPanel, cfg.panelUrl)
             return
@@ -238,6 +239,12 @@ final class TrayController: NSObject {
         if !NSWorkspace.shared.open(url) {
             warn(Loc.cantOpenPanel, cfg.panelUrl)
         }
+    }
+
+    /// First open of the dashboard: non-blocking notification with actual panel_url; marker beside config.
+    private func maybeShowPanelTip() {
+        guard AppConfig.tryClaimPanelTip() else { return }
+        tip(Loc.openPanel, Loc.panelTipBody(cfg.panelUrl))
     }
 
     @objc private func launchSwitchProgram() {
@@ -287,6 +294,17 @@ final class TrayController: NSObject {
         alert.addButton(withTitle: "OK")
         NSApp.activate(ignoringOtherApps: true)
         alert.runModal()
+    }
+
+    /// Non-blocking first-run tip (avoid modal so the panel still opens immediately).
+    private func tip(_ title: String, _ text: String) {
+        if disposed { return }
+        var t = text
+        if t.count > 250 { t = String(t.prefix(247)) + "..." }
+        let n = NSUserNotification()
+        n.title = title
+        n.informativeText = t
+        NSUserNotificationCenter.default.deliver(n)
     }
 
     @objc func quit() {

@@ -17,7 +17,7 @@ Assets in `Assets/`. Override via `Data/Icons/` with the same names.
 
 Grey status line at top → Open panel / Open app → modes → Quit.
 
-- Left-click opens `panel_url`; right-click shows the menu
+- Left-click opens `panel_url`; right-click shows the menu; first open shows a tip with the real URL (sidecar `.panel_tip_shown`)
 - Hover: when connected — mode / log / TUN; when offline — short reason (Can't connect / Auth failed / Timed out)
 
 ## Config

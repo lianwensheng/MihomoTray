@@ -228,6 +228,7 @@ class GtkTrayApp:
         threading.Thread(target=work, daemon=True).start()
 
     def open_panel(self):
+        self.maybe_show_panel_tip()
         url = self.cfg.panel_url
         try:
             if webbrowser.open(url):
@@ -239,6 +240,11 @@ class GtkTrayApp:
                              start_new_session=True)
         except OSError as e:
             self.warn(loc.CantOpenPanel(), str(e) + "\n" + url)
+
+    def maybe_show_panel_tip(self):
+        if not config.try_claim_panel_tip():
+            return
+        self.info(loc.OpenPanel(), loc.PanelTipBody(self.cfg.panel_url))
 
     def launch_switch_program(self):
         argv, err = self.cfg.program_command()
@@ -267,6 +273,22 @@ class GtkTrayApp:
             except Exception:
                 pass
         # 没有 libnotify：只打日志（与 Qt 版无通知服务时一致）
+
+    def info(self, title, text):
+        if self.disposed:
+            return
+        if len(text) > 250:
+            text = text[:247] + "..."
+        self.warnings.append((title, text))
+        log(title + ": " + text)
+        if _HAS_NOTIFY:
+            try:
+                n = Notify.Notification.new(title, text, None)
+                n.set_urgency(Notify.Urgency.LOW)
+                n.show()
+                return
+            except Exception:
+                pass
 
     def quit(self):
         if self.disposed:

@@ -53,6 +53,12 @@ enum Loc {
     static var switchFailed: String { en ? "Switch failed" : "切换失败" }
     static var controllerLabel: String { en ? "Controller: " : "控制器：" }
     static var cantOpenPanel: String { en ? "Couldn't open dashboard" : "无法打开面板" }
+    /// First-open dashboard tip body (actual panel_url; no trailing period).
+    static func panelTipBody(_ url: String) -> String {
+        en
+            ? "Opening \(url)\nChange panel_url in config.ini"
+            : "即将打开 \(url)\n可在 config.ini 的 panel_url 修改"
+    }
     static var cantOpenApp: String { en ? "Couldn't open app" : "无法切换程序" }
     static var switchNotSet: String {
         en ? "switch_program is not set in config.ini" : "config.ini 中没有设置 switch_program"

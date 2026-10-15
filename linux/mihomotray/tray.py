@@ -217,6 +217,7 @@ class TrayApp(QObject):
         threading.Thread(target=work, daemon=True).start()
 
     def open_panel(self):
+        self.maybe_show_panel_tip()
         url = self.cfg.panel_url
         if QDesktopServices.openUrl(QUrl(url)):
             return
@@ -225,6 +226,12 @@ class TrayApp(QObject):
                              start_new_session=True)
         except OSError as e:
             self.warn(loc.CantOpenPanel(), str(e) + "\n" + url)
+
+    def maybe_show_panel_tip(self):
+        """首次打开面板：通知实际 panel_url；config 旁 .panel_tip_shown 只提示一次。"""
+        if not config.try_claim_panel_tip():
+            return
+        self.info(loc.OpenPanel(), loc.PanelTipBody(self.cfg.panel_url))
 
     def launch_switch_program(self):
         argv, err = self.cfg.program_command()
@@ -253,6 +260,26 @@ class TrayApp(QObject):
         if shutil.which("notify-send"):
             try:
                 subprocess.Popen(["notify-send", "-a", "MihomoTray", "-u", "normal", title, text],
+                                 stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            except OSError:
+                pass
+
+    def info(self, title, text):
+        """首次打开面板等轻提示。"""
+        if self.disposed:
+            return
+        if len(text) > 250:
+            text = text[:247] + "..."
+        log(title + ": " + text)
+        try:
+            if QSystemTrayIcon.supportsMessages() and self.tray.isVisible():
+                self.tray.showMessage(title, text, QSystemTrayIcon.MessageIcon.Information, 4000)
+                return
+        except Exception:
+            pass
+        if shutil.which("notify-send"):
+            try:
+                subprocess.Popen(["notify-send", "-a", "MihomoTray", "-u", "low", title, text],
                                  stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
             except OSError:
                 pass

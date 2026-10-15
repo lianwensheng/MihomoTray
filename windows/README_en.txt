@@ -9,7 +9,7 @@ Rule = original cat, Global = red, Direct = green, Offline = grey
 
 Usage
 -----
-Left-click   Open dashboard (panel_url)
+Left-click   Open dashboard (panel_url); first time shows a tip with the real URL (sidecar .panel_tip_shown)
 Right-click  Menu: status (grey) | Open panel / Open app | modes | Exit
 Hover        When connected: mode / log / TUN; when offline: short reason
              (Can't connect / Auth failed / Timed out)

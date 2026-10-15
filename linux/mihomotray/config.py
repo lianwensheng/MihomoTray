@@ -29,6 +29,7 @@ DEFAULT_INI = (
     "; Program launched by Open App (executable path, AppImage or a command on PATH); leave empty to gray out the item\n"
     "; 支持带空格/带引号的路径、~、环境变量（如 $HOME）、相对路径（相对本配置文件所在文件夹）\n"
     "; Paths may contain spaces/quotes, ~, env vars (e.g. $HOME), or be relative to this config's folder\n"
+    "; switch_program = ~/Applications/某客户端.AppImage\n"
     "; switch_program = ~/Applications/SomeClient.AppImage\n"
     "; switch_program = some-client\n"
     "switch_program = \n"

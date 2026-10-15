@@ -43,8 +43,9 @@ namespace MihomoTray
 "\r\n" +
 "; 点击“切换程序”时启动的程序（通常是某个 mihomo 内核图形客户端的主程序，.exe 或 .lnk 快捷方式都行），留空则该菜单项变灰\r\n" +
 "; Program launched by Open App (usually a mihomo GUI client .exe or .lnk); leave empty to gray out the item\r\n" +
-"; 支持带空格/带引号的路径、环境变量（如 %LOCALAPPDATA%）、相对路径（相对本小工具 exe 所在文件夹）\r\n" +
+"; 支持带空格/带引号的路径、环境变量（如 %LOCALAPPDATA%）、相对路径（相对本软件 exe 所在文件夹）\r\n" +
 "; Paths may contain spaces/quotes, env vars (e.g. %LOCALAPPDATA%), or be relative to this app's folder\r\n" +
+"; switch_program = C:\\Program Files\\某客户端\\某客户端.exe\r\n" +
 "; switch_program = C:\\Program Files\\SomeClient\\SomeClient.exe\r\n" +
 "; switch_program = %LOCALAPPDATA%\\Programs\\SomeClient\\SomeClient.exe\r\n" +
 "switch_program = \r\n" +

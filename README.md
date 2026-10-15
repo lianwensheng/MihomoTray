@@ -49,7 +49,7 @@ cd linux
 
 | 平台 | 发版号（动了才发版） | 本地构建号 N | 产物文件名 |
 |------|----------------------|--------------|------------|
-| Windows | `AssemblyInformationalVersion`（产品版本） | `AssemblyFileVersion` 的第 4 段 | Release 用 `x.y.z`；本地 N>0 时 zip 可带 `.N` |
+| Windows | `AssemblyInformationalVersion`（产品版本） | `AssemblyFileVersion` 的第 4 段 | Release / CI 用 `x.y.z`；本地 `build.bat`/`build.sh` 在 N>0 时 zip 带 `.N` |
 | macOS | `CFBundleShortVersionString` | `CFBundleVersion` = `x.y.z.N` | CI 读 ShortVersion，Release 用 `x.y.z` |
 | Linux | `__version__`（UA / `pyproject.toml`） | `__build__`（不进 UA） | N=0 用 `x.y.z`；N>0 时本地产物文件名带 `.N` |
 

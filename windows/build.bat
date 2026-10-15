@@ -32,4 +32,19 @@ copy /y README_en.txt dist\ >nul
 rem 已有的 config.ini 不覆盖，免得冲掉你填好的 secret
 if not exist dist\Data\config.ini copy /y config.ini dist\Data\config.ini >nul
 echo 编译完成：dist\MihomoTray.exe
+rem 本地打包 zip（CI 由 workflow 按产品版本打包，这里跳过）
+if defined CI goto :done_pack
+for /f "tokens=2 delims=()" %%a in ('findstr /C:"AssemblyInformationalVersion" src\AssemblyInfo.cs') do set "PRODUCT=%%~a"
+for /f "tokens=2 delims=()" %%a in ('findstr /C:"AssemblyFileVersion" src\AssemblyInfo.cs') do set "FILEVER=%%~a"
+for /f "tokens=1-4 delims=." %%a in ("%FILEVER%") do set "N=%%d"
+if not defined N set "N=0"
+if "%N%"=="" set "N=0"
+set "ARTIFACT_VER=%PRODUCT%"
+if not "%N%"=="0" set "ARTIFACT_VER=%FILEVER%"
+set "ZIP=MihomoTray_windows_%ARTIFACT_VER%.zip"
+if exist "%ZIP%" del /q "%ZIP%"
+powershell -NoProfile -Command "Compress-Archive -Path dist\* -DestinationPath '%ZIP%' -Force"
+if errorlevel 1 (echo 打包 zip 失败 & %PAUSE% & exit /b 1)
+echo 已打包：%ZIP%（产品 %PRODUCT% 文件 %FILEVER%）
+:done_pack
 %PAUSE%

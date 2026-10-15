@@ -38,3 +38,27 @@ cp README.txt README_en.txt dist/
 cfg dist/Data/config.ini light
 cfg config.ini light $FORCE
 echo "built dist/MihomoTray.exe"
+
+# 本地打包：产品版本 x.y.z；FileVersion 第 4 段 N>0 时 zip 名带 .N（CI 不跑本脚本）
+PRODUCT=$(sed -n 's/.*AssemblyInformationalVersion("\([^"]*\)").*/\1/p' src/AssemblyInfo.cs | head -1)
+FILEVER=$(sed -n 's/.*AssemblyFileVersion("\([^"]*\)").*/\1/p' src/AssemblyInfo.cs | head -1)
+N=$(printf '%s' "$FILEVER" | awk -F. '{print ($4 == "" ? 0 : $4)}')
+if [ "$N" -gt 0 ]; then
+  ARTIFACT_VER="$FILEVER"
+else
+  ARTIFACT_VER="$PRODUCT"
+fi
+ZIP="MihomoTray_windows_${ARTIFACT_VER}.zip"
+rm -f "$ZIP"
+python3 - "$ZIP" <<'PY'
+import sys, zipfile
+from pathlib import Path
+zip_path = Path(sys.argv[1])
+root = Path("dist")
+with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as z:
+    for f in sorted(root.rglob("*")):
+        if f.is_file():
+            z.write(f, f.relative_to(root).as_posix())
+print("packed", zip_path)
+PY
+echo "packed $ZIP (product $PRODUCT file $FILEVER)"

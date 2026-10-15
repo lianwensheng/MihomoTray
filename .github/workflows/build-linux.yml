@@ -48,7 +48,7 @@ jobs:
       - name: Read version
         id: ver
         run: |
-          v=$(sed -n 's/^__version__ = "\(.*\)"/\1/p' mihomotray/__init__.py)
+          v=$(sed -n 's/^__version__ = "\([^"]*\)".*/\1/p' mihomotray/__init__.py)
           echo "version=$v" >> "$GITHUB_OUTPUT"
           echo "Version $v"
 

@@ -68,4 +68,4 @@ QT_QPA_PLATFORM=offscreen xvfb-run -a python3 -m unittest discover -s test -v
 
 ## Version / Actions
 
-**1.0.3**. Workflow `build-linux.yml` builds both variants; Release on `linux-v*` tags (e.g. `linux-v1.0.3`) attaches all four artifacts.
+**1.0.3** marketing `__version__` (UA / `pyproject.toml`); local `__build__` starts at `0` and is not in the UA. Actions/Release use `__version__` only; when `__build__>0`, local artifact filenames add `.N`. Workflow `build-linux.yml` builds both variants; Release on `linux-v*` tags (e.g. `linux-v1.0.3`) attaches all four artifacts.

@@ -9,7 +9,30 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")" && pwd)"
 cd "$ROOT"
 
-VERSION="1.0.5"
+# ShortVersion = 发版号 x.y.z；BundleVersion = x.y.z.N（本地只加 N）。CI 读 ShortVersion。
+plist_str() {
+  local key="$1"
+  if /usr/libexec/PlistBuddy -c "Print :$key" Resources/Info.plist 2>/dev/null; then
+    return 0
+  fi
+  python3 -c '
+import sys
+from pathlib import Path
+key = sys.argv[1]
+text = Path("Resources/Info.plist").read_text()
+needle = "<key>%s</key>" % key
+i = text.find(needle)
+if i < 0:
+    raise SystemExit(1)
+rest = text[i + len(needle):]
+a = rest.find("<string>")
+b = rest.find("</string>", a)
+print(rest[a + 8:b].strip())
+' "$key"
+}
+VERSION="$(plist_str CFBundleShortVersionString)"
+BUILD="$(plist_str CFBundleVersion)"
+
 APP_NAME="MihomoTray"
 DIST="$ROOT/dist"
 
@@ -72,4 +95,4 @@ for a in $ARCHS; do
 done
 
 echo "OK. Outputs under $DIST/{arm64,x86_64}/"
-echo "Version $VERSION"
+echo "Version $VERSION (CFBundleVersion ${BUILD:-?})"

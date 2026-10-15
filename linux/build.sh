@@ -8,7 +8,15 @@
 set -e
 cd "$(dirname "$0")"
 ROOT="$(pwd)"
-VERSION=$(sed -n 's/^__version__ = "\(.*\)"/\1/p' mihomotray/__init__.py)
+VERSION=$(sed -n 's/^__version__ = "\([^"]*\)".*/\1/p' mihomotray/__init__.py)
+BUILD=$(sed -n 's/^__build__ = \([0-9][0-9]*\).*/\1/p' mihomotray/__init__.py)
+BUILD=${BUILD:-0}
+# 发版/CI：产物用 x.y.z；本地 __build__>0 时文件名带 .N（__version__/UA 仍为 x.y.z）
+if [ "$BUILD" -gt 0 ]; then
+  ARTIFACT_VER="${VERSION}.${BUILD}"
+else
+  ARTIFACT_VER="$VERSION"
+fi
 TARGET="${1:-all}"
 case "$TARGET" in qt|gtk|all) ;; *) echo "usage: $0 [qt|gtk|all]" >&2; exit 1 ;; esac
 PYVER="${PYVER:-3.12}"
@@ -54,19 +62,19 @@ build_qt() {
       "https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-x86_64.AppImage"
     chmod +x "$TOOL"
   fi
-  SLIM_OUT="$ROOT/dist/MihomoTray_linux_qt_${VERSION}_x86_64.AppImage"
+  SLIM_OUT="$ROOT/dist/MihomoTray_linux_qt_${ARTIFACT_VER}_x86_64.AppImage"
   rm -f "$SLIM_OUT"
   ARCH=x86_64 APPIMAGE_EXTRACT_AND_RUN=1 "$TOOL" "$SQ" "$SLIM_OUT"
   chmod +x "$SLIM_OUT"
   rm -f "$FAT"
-  find "$ROOT/dist" -maxdepth 1 -name '*.AppImage' ! -name "MihomoTray_linux_qt_${VERSION}_x86_64.AppImage" -delete 2>/dev/null || true
+  find "$ROOT/dist" -maxdepth 1 -name '*.AppImage' ! -name "MihomoTray_linux_qt_${ARTIFACT_VER}_x86_64.AppImage" -delete 2>/dev/null || true
   rm -rf "$EXTRACT" "$WORK"
   echo "built $SLIM_OUT ($(du -h "$SLIM_OUT" | cut -f1))"
 }
 
 build_gtk() {
   echo "==> building GTK packages (deb / rpm / tar.gz)"
-  python3 "$ROOT/tools/build_gtk_packages.py" "$VERSION"
+  python3 "$ROOT/tools/build_gtk_packages.py" "$ARTIFACT_VER"
 }
 
 case "$TARGET" in
@@ -75,4 +83,4 @@ case "$TARGET" in
   all) build_qt; build_gtk ;;
 esac
 rm -rf build mihomotray.egg-info
-echo "done (version $VERSION)"
+echo "done (version $VERSION build $BUILD → artifacts $ARTIFACT_VER)"

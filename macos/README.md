@@ -42,10 +42,10 @@
 - `Resources/Info.plist`、`config.ini` 模板
 - `tools/make_mac_icons.py` 从 Windows CFW 图生成 template / 红绿灰
 
-版本 **1.0.5**（`Info.plist` / `CFBundleShortVersionString`）。
+版本 **1.0.5**：发版号 `CFBundleShortVersionString` = `1.0.5`；构建号 `CFBundleVersion` = `1.0.5.0`（本地只加第 4 段 `N`）。Actions / Release 读 ShortVersion。
 
 ## GitHub Actions 编译
 
-推到 GitHub 后 `.github/workflows/build-mac.yml` 会在 `macos-14` 上跑 `./build.sh`，产物 `MihomoTray_macos_<版本>_AppleSilicon.zip` 与 `MihomoTray_macos_<版本>_Intel.zip` 在 Artifacts 里下载；推 `mac-v*` 标签（例如 `mac-v1.0.5`）时附到 Release。版本号从 `Resources/Info.plist` 读取。
+推到 GitHub 后 `.github/workflows/build-mac.yml` 会在 `macos-14` 上跑 `./build.sh`，产物 `MihomoTray_macos_<版本>_AppleSilicon.zip` 与 `MihomoTray_macos_<版本>_Intel.zip` 在 Artifacts 里下载；推 `mac-v*` 标签（例如 `mac-v1.0.5`）时附到 Release。发版号从 `Resources/Info.plist` 的 `CFBundleShortVersionString` 读取。
 
 程序没有签名和公证，第一次打开请在 Finder 里右键 `MihomoTray.app` → 打开，再点「打开」确认。

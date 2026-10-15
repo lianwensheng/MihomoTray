@@ -33,7 +33,7 @@ open dist/MihomoTray.app
 
 Requires Xcode or CLT (`swiftc`). Source + icons can be prepared on Linux; the `.app` binary must be built on macOS.
 
-Version **1.0.5**.
+Version **1.0.5**: marketing `CFBundleShortVersionString` = `1.0.5`; build `CFBundleVersion` = `1.0.5.0` (bump only the 4th segment `N` for local builds). Actions/Release use ShortVersion.
 
 ## Build (on a Mac)
 
@@ -47,7 +47,7 @@ No universal binary; CI uploads separate Apple Silicon and Intel zips.
 
 ## GitHub Actions
 
-`.github/workflows/build-mac.yml` runs `./build.sh` on `macos-14` and uploads `MihomoTray_macos_<version>_AppleSilicon.zip` and `MihomoTray_macos_<version>_Intel.zip` as artifacts; pushing a `mac-v*` tag (e.g. `mac-v1.0.5`) also attaches them to a Release. The version is read from `Resources/Info.plist`.
+`.github/workflows/build-mac.yml` runs `./build.sh` on `macos-14` and uploads `MihomoTray_macos_<version>_AppleSilicon.zip` and `MihomoTray_macos_<version>_Intel.zip` as artifacts; pushing a `mac-v*` tag (e.g. `mac-v1.0.5`) also attaches them to a Release. The marketing version is read from `CFBundleShortVersionString` in `Resources/Info.plist`.
 
 The app is not signed or notarized: on first launch, right-click `MihomoTray.app` in Finder → Open, then confirm Open.
 

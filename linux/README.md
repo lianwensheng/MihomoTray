@@ -117,7 +117,7 @@ QT_QPA_PLATFORM=offscreen xvfb-run -a python3 -m unittest discover -s test -v
 
 ## 版本与 GitHub Actions
 
-版本 **1.0.3**（`mihomotray/__init__.py`、`pyproject.toml`，User-Agent `MihomoTray/1.0.3`）。
+版本 **1.0.3**：发版号 `__version__`（与 `pyproject.toml`、User-Agent `MihomoTray/1.0.3` 一致）；本地构建号 `__build__`（从 `0` 起，不进 UA）。Actions / Release 只认 `__version__`；本地 `__build__>0` 时产物文件名带 `.N`。
 `.github/workflows/build-linux.yml` 在 `ubuntu-latest` 上跑测试并 `./build.sh all`；Artifacts / 推 `linux-v*` 标签（例如 `linux-v1.0.3`）的 Release 附带上述四个产物。
 
 ## 和 Windows 版的差别

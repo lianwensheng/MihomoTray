@@ -46,4 +46,5 @@ Windows 端由自带插件 `plugins/tray/windows/tray_plugin.cpp` 绘制：`Crea
 
 ## 版本与 GitHub Actions
 版本 **2.1.8**（`src/AssemblyInfo.cs`、User-Agent `MihomoTray/2.1.8`）。
+发版只改**产品版本** `AssemblyInformationalVersion`（`x.y.z`）；本地测试只顺延**文件版本** `AssemblyFileVersion` 第 4 段 `N`（从 `0` 起，如 `2.1.8.0` → `2.1.8.1`）。Actions / Release 标签读产品版本，不跟 FileVersion。
 `.github/workflows/build-win.yml` 在 `windows-latest` 上用 cmd 跑 `build.bat`（`CI` 环境变量存在时不 `pause`，本地双击不变），产物 `MihomoTray_windows_<版本>.zip` 在 Artifacts 里下载；推 `win-v*` 标签（例如 `win-v2.1.8`）时附到 Release。exe 未签名，首次运行 SmartScreen 可能提示，点「更多信息 → 仍要运行」。

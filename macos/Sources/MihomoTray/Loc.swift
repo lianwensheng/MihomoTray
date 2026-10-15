@@ -53,20 +53,20 @@ enum Loc {
     static var switchFailed: String { en ? "Switch failed" : "切换失败" }
     static var controllerLabel: String { en ? "Controller: " : "控制器：" }
     static var cantOpenPanel: String { en ? "Couldn't open dashboard" : "无法打开面板" }
-    /// First line of the panel tip: set secret to stop reminders (no trailing period).
+    /// Last line of the panel tip: set secret to stop reminders (no trailing period).
     static var panelTipStopLine: String {
-        en ? "Set secret in config.ini to stop this reminder" : "配置 secret 安全密钥后停止提醒通知"
+        en ? "Set secret to stop this tip" : "填入 secret 安全密钥后不再提示"
     }
-    /// Short fallback when panel_url is too long: keep stop line + panel_url hint (no trailing period).
-    static var panelTipShort: String {
-        panelTipStopLine + "\n" + (en ? "See panel_url in config.ini" : "见 config.ini 的 panel_url")
-    }
-    /// Dashboard tip body: stop-reminder first, then panel_url; long URL → short fallback (no trailing period).
+    /// Dashboard tip body: URL on one line first, stop-reminder last; URL over 28 chars → first 28 + ... (no trailing period).
     static func panelTipBody(_ url: String) -> String {
-        let full = en
-            ? "\(panelTipStopLine)\nOpening \(url)\nChange panel_url in config.ini"
-            : "\(panelTipStopLine)\n即将打开 \(url)\n可在 config.ini 的 panel_url 修改"
-        return full.count <= 250 ? full : panelTipShort
+        var u = url
+        if u.count > 28 {
+            let end = u.index(u.startIndex, offsetBy: 28)
+            u = String(u[..<end]) + "..."
+        }
+        let head = en ? "Opening " : "即将打开 "
+        let mid = en ? "\nChange panel_url in config.ini\n" : "\n可在 config.ini 的 panel_url 修改\n"
+        return head + u + mid + panelTipStopLine
     }
     static var cantOpenApp: String { en ? "Couldn't open app" : "无法切换程序" }
     static var switchNotSet: String {

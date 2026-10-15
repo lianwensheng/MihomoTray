@@ -11,8 +11,8 @@ ROOT="$(pwd)"
 VERSION=$(sed -n 's/^__version__ = "\([^"]*\)".*/\1/p' mihomotray/__init__.py)
 BUILD=$(sed -n 's/^__build__ = \([0-9][0-9]*\).*/\1/p' mihomotray/__init__.py)
 BUILD=${BUILD:-0}
-# 发版/CI：产物用 x.y.z；本地 __build__>0 时文件名带 .N（__version__/UA 仍为 x.y.z）
-if [ "$BUILD" -gt 0 ]; then
+# 发版/CI：产物用 x.y.z；仅本地且 __build__>0 时文件名带 .N（__version__/UA 仍为 x.y.z）
+if [ "$BUILD" -gt 0 ] && [ -z "${CI:-}${GITHUB_ACTIONS:-}" ]; then
   ARTIFACT_VER="${VERSION}.${BUILD}"
 else
   ARTIFACT_VER="$VERSION"

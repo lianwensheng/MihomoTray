@@ -30,15 +30,15 @@ namespace MihomoTray
 "\r\n" +
 "[mihomo]\r\n" +
 "; external-controller 地址，自定义地址在 mihomo 配置里查询并更换\r\n" +
-"; external-controller address — look it up in the mihomo config\r\n" +
+"; external-controller address — look it up in your mihomo config\r\n" +
 "controller = 127.0.0.1:9090\r\n" +
 "\r\n" +
 "; external-controller 的 secret，此安全密钥在 mihomo 配置后查询并填入（请只用 ASCII 字母、数字和符号）\r\n" +
-"; external-controller secret — look up this access key in your mihomo config and fill it in (ASCII letters, digits, and symbols only)\r\n" +
+"; external-controller secret — look it up in your mihomo config and fill it in (ASCII letters, digits, and symbols only)\r\n" +
 "secret = \r\n" +
 "\r\n" +
 "; 点击“打开面板”时打开的网址，自定义网址在 mihomo 配置里查询并更换\r\n" +
-"; URL opened by Dashboard / left-click — look it up in the mihomo config\r\n" +
+"; URL opened by Dashboard / left-click — look it up in your mihomo config\r\n" +
 "panel_url = http://127.0.0.1:9090/ui/\r\n" +
 "\r\n" +
 "; 点击“切换程序”时启动的程序（通常是某个 mihomo 内核图形客户端的主程序，.exe 或 .lnk 快捷方式都行），留空则该菜单项变灰\r\n" +

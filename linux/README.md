@@ -1,31 +1,31 @@
 # MihomoTray（Linux）1.0.3
 
-托盘小工具：看图标颜色就知道 mihomo 当前模式（防忘关全局），菜单里切换规则 / 全局 / 直连。英文见 `README_en.md`。
+Mihomo 托盘小工具，按不同颜色图标显示当前代理模式，防止忘关全局模式；菜单切换规则 / 全局 / 直连，方便轻量操作。英文见 `README_en.md`。
 
 ## 变体
 
-| 变体 | 产物 | 体积 | 依赖 | 特点 |
-|------|------|------|------|------|
-| **Qt（精简 AppImage）** | `MihomoTray_linux_qt_1.0.3_x86_64.AppImage` | 约 46MB | 基本自带；需 FUSE2 或 `--appimage-extract-and-run` | KDE/XFCE 等可左键开面板；有悬停时显示短状态 |
-| **GTK（轻量）** | `.deb` / `.rpm` / `.tar.gz` | 约几百 KB | 系统 Python3 + PyGObject + AppIndicator + Gtk3 + libnotify | 体积小；点击主要弹菜单；**无悬停**，断连时看菜单顶部灰字状态 |
+| 变体 | 产物 | 说明 |
+|------|------|------|
+| **Qt（精简 AppImage）** | `MihomoTray_linux_qt_1.0.3_x86_64.AppImage` | 约 46MB；KDE/XFCE 等可左键开面板；桌面支持时有悬停 |
+| **GTK（轻量）** | `.deb` / `.rpm` / `.tar.gz` | 约几百 KB；以菜单为主；**无悬停**，断连时看菜单顶灰字 |
 
-两变体共用配置 / 连接 / 文案 / 开机自启逻辑。
+两变体共用配置 / 连接 / 文案 / 开机自启逻辑。图标与 Windows 同套 CFW 猫：规则原色、全局红、直连绿、未连接灰。
 
-## 状态提示
+## 使用方法
 
-未连接时图标为灰。悬停（若桌面支持）与菜单顶灰字（仅断连时显示）区分：
+1. 运行对应变体后，托盘出现小猫图标。
+   - 原色 = 规则　红 = 全局　绿 = 直连　灰 = 未连接
+   - **悬停**（若桌面支持，主要是 Qt）：已连接时约 3 行（模式 / 日志级别 / 虚拟网卡）；未连接为短原因（无法连接 / 鉴权失败 / 连接超时）
+   - **GTK** 无悬停时，断连状态只看菜单顶部灰字
 
-- **无法连接** — controller 地址/端口不对，或 mihomo 未开
-- **鉴权失败** — secret 与 mihomo 不一致
-- **连接超时** — 控制器无响应
+2. 菜单：（断连时顶栏灰字；已连接从「打开面板」起）
+   - 打开面板 → 浏览器打开 `panel_url`（默认 `http://127.0.0.1:9090/ui/`）；`secret` 为空时通知提示，配好后停止
+   - 切换程序 → 启动 `switch_program`；未设置则灰显
+   - 规则 / 全局 / 直连 → 切换模式（当前打勾）
+   - 退出
 
-已连接时菜单不显示顶栏灰字，模式看图标颜色与悬停。不做偶发桌面通知刷屏。
-
-## 图标与菜单
-
-图标与 Windows 同套 CFW 猫：规则原色、全局红、直连绿、未连接灰。
-
-菜单：断连时状态（灰字）→ 打开面板 / 切换程序 → 模式 → 退出；已连接时从「打开面板」起。打开面板时若 `secret` 为空则通知实际 `{panel_url}` 与停提醒说明；填入 `secret` 后不再提示。
+3. 默认约每 3 秒轮询；别处改了模式，图标会跟着变。  
+4. 开机自启：`autostart = true` 后写入 `~/.config/autostart/MihomoTray.desktop`（默认 false）。
 
 ## 桌面支持
 
@@ -35,13 +35,23 @@
 | GNOME（Fedora 等） | 需装 AppIndicator 扩展 |
 | KDE / XFCE / Cinnamon / MATE / Budgie | 通常原生支持托盘 |
 
-## 配置
+不支持悬停的桌面不会用菜单顶模式文字顶替悬停（按设计省略）。
 
-`~/.config/MihomoTray/config.ini`，首次自动生成。键：`controller`、`secret`、`panel_url`、`switch_program`、`poll_interval`、`close_connections`、`language`、`autostart`（无 `theme`）。
+## 配置（`~/.config/MihomoTray/config.ini`，首次自动生成，改完请重启）
 
-默认模板按小节空行排版；对照 mihomo 填写 controller / secret / panel_url。改完后重启。
+| 键 | 说明 |
+|----|------|
+| `controller` | external-controller，默认 `127.0.0.1:9090` |
+| `secret` | 访问密钥（mihomo 配置中查询）；ASCII；整行密钥；打开面板时若为空会提示 |
+| `panel_url` | 面板网址 |
+| `switch_program` | 「切换程序」路径，可留空 |
+| `switch_program_args` | 附加参数 |
+| `poll_interval` | 轮询秒数（默认 3） |
+| `close_connections` | 切换后是否断开连接（默认 true） |
+| `language` | `system` / `zh` / `en` |
+| `autostart` | 默认 false |
 
-开机自启：`autostart = true` 后写入 `~/.config/autostart/MihomoTray.desktop`。
+无 `theme`。删配置可重生默认；升级只追加缺键。
 
 ## 运行
 
@@ -57,36 +67,30 @@ chmod +x MihomoTray_linux_qt_1.0.3_x86_64.AppImage
 ### GTK 包
 
 ```bash
-# Debian/Ubuntu
-sudo apt install ./MihomoTray_linux_1.0.3.deb
-mihomotray
-
-# Fedora
-sudo dnf install ./MihomoTray_linux_1.0.3.rpm
-mihomotray
-
-# 通用 tar.gz
-tar xzf MihomoTray_linux_gtk_1.0.3.tar.gz
-cd MihomoTray_linux_gtk_1.0.3
-sudo ./install.sh
+sudo apt install ./MihomoTray_linux_1.0.3.deb && mihomotray   # Debian/Ubuntu
+sudo dnf install ./MihomoTray_linux_1.0.3.rpm && mihomotray   # Fedora
+tar xzf MihomoTray_linux_gtk_1.0.3.tar.gz && cd MihomoTray_linux_gtk_1.0.3 && sudo ./install.sh
 ```
 
 ### 从源码
 
 ```bash
 MIHOMOTRAY_FRONTEND=qt ./run.sh    # 需 PySide6
-MIHOMOTRAY_FRONTEND=gtk ./run.sh   # 需系统 gi 等
-```
-
-## 打包与测试
-
-```bash
+MIHOMOTRAY_FRONTEND=gtk ./run.sh
 ./build.sh all    # 或 qt / gtk
-QT_QPA_PLATFORM=offscreen xvfb-run -a python3 -m unittest discover -s test -v
 ```
 
 ## 版本与 CI
 
 - 发版号 `__version__` = **1.0.3**（UA / 包名）
-- 本地 `__build__` 从 0 起，不进 UA；N>0 时产物文件名带 `.N`
+- 本地 `__build__` 从 0 起，不进 UA；N>0 时本地产物名带 `.N`
 - Actions：`build-linux.yml`；标签 `linux-v*`
+
+## 常见问题
+
+- 除 `secret` 外可用行尾 `;` / `#` 注释
+- 配置错误会提示并用默认值
+- 图标一直灰：核对 mihomo `external-controller` / `secret`
+- 切换失败会提示原因（无法连接 / 鉴权失败等）
+
+图标颜色用于一眼区分模式，避免忘关全局。

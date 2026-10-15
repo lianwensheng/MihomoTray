@@ -1,31 +1,57 @@
 # MihomoTray (Linux) 1.0.3
 
-Tray helper for mihomo mode (Rule / Global / Direct); icon color shows the mode so Global left on is obvious. Chinese: `README.md`.
+Mihomo tray helper. Icon colors show Rule / Global / Direct so Global left on is obvious. Chinese: `README.md`.
 
 ## Variants
 
 | Variant | Artifacts | Notes |
 |---------|-----------|-------|
-| **Qt (slim AppImage)** | `MihomoTray_linux_qt_1.0.3_x86_64.AppImage` | ~46MB; left-click panel on KDE/XFCE; hover tip when the desktop supports it |
-| **GTK (light)** | `.deb` / `.rpm` / `.tar.gz` | Tiny; menu-first; **no hover** — when offline, use the grey status line at the top of the menu |
+| **Qt (slim AppImage)** | `MihomoTray_linux_qt_1.0.3_x86_64.AppImage` | ~46MB; left-click panel on KDE/XFCE; hover when the desktop supports it |
+| **GTK (light)** | `.deb` / `.rpm` / `.tar.gz` | Tiny; menu-first; **no hover** — when offline use the grey status line at the top of the menu |
 
-## Status text
+Shared config / client / strings / autostart. Same CFW-style cat icons as Windows: original / red / green / grey.
 
-Grey icon when offline. Hover (if any) and the grey menu line (offline only) show:
+## Usage
 
-- **Can't connect** — bad controller host/port or mihomo down
-- **Auth failed** — secret mismatch
-- **Timed out** — controller not responding
+1. Run a variant; the cat appears in the tray.
+   - Original = Rule　Red = Global　Green = Direct　Grey = offline
+   - **Hover** (if supported, mainly Qt): 3 lines when connected (mode / log / TUN); short reason when offline (Can't connect / Auth failed / Timed out)
+   - **GTK** without hover: read offline status from the grey menu line
 
-When connected, the grey status row is hidden; mode is shown by icon color and hover. No spammy desktop notifications.
+2. Menu: (grey status **only when offline**; when connected starts at Open panel)
+   - Open panel → browser on `panel_url` (default `http://127.0.0.1:9090/ui/`); tip while `secret` empty
+   - Open app → `switch_program` (grey if unset)
+   - Rule / Global / Direct → switch mode
+   - Quit
 
-Opening the dashboard while `secret` is empty shows a tip with the actual `panel_url` (set `secret` to stop).
+3. Polls about every 3 seconds by default.  
+4. Autostart: `autostart = true` → `~/.config/autostart/MihomoTray.desktop` (default false).
 
-## Config
+## Desktop support
 
-`~/.config/MihomoTray/config.ini` on first run. Keys: `controller`, `secret`, `panel_url`, `switch_program`, `poll_interval`, `close_connections`, `language`, `autostart` (no `theme`).
+| Desktop | Notes |
+|---------|-------|
+| GNOME (Ubuntu) | AppIndicator extension usually present |
+| GNOME (Fedora, etc.) | Install AppIndicator extension |
+| KDE / XFCE / Cinnamon / MATE / Budgie | Tray usually works |
 
-Default template uses blank lines between sections. Match controller/secret/panel_url to mihomo. Restart after edits.
+If the desktop has no hover tip, mode is not duplicated as menu header text (by design).
+
+## Config (`~/.config/MihomoTray/config.ini`)
+
+| Key | Meaning |
+|-----|---------|
+| `controller` | external-controller (default `127.0.0.1:9090`) |
+| `secret` | Access key from mihomo; ASCII; whole-line key; tip when opening panel if empty |
+| `panel_url` | Dashboard URL |
+| `switch_program` | Optional “Open app” path |
+| `switch_program_args` | Extra args |
+| `poll_interval` | Seconds (default 3) |
+| `close_connections` | Default true |
+| `language` | `system` / `zh` / `en` |
+| `autostart` | Default false |
+
+No `theme`. Missing keys are appended on upgrade.
 
 ## Run / build
 
@@ -35,6 +61,15 @@ sudo apt install ./MihomoTray_linux_1.0.3.deb && mihomotray
 ./build.sh all    # or qt / gtk
 ```
 
-## Version / Actions
+## Version / CI
 
-Marketing `__version__` **1.0.3** (UA / packages). Local `__build__` starts at 0 (not in UA); N>0 adds `.N` to local artifact names. Workflow `build-linux.yml`; Release on `linux-v*`.
+Marketing `__version__` **1.0.3**; local `__build__` starts at 0 (not in UA); N>0 adds `.N` to local artifact names. Workflow `build-linux.yml`; tags `linux-v*`.
+
+## FAQ
+
+- Trailing comments OK except on `secret`
+- Bad config → tip + defaults
+- Grey icon → match controller/secret to mihomo
+- Switch failures show the reason
+
+Icon colors exist so you notice Global left on.

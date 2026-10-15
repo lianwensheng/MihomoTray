@@ -1,32 +1,53 @@
 # MihomoTray (macOS) 1.0.5
 
-Menubar helper to switch mihomo mode (Rule / Global / Direct). Icon colors show the current mode so Global left on is obvious. Chinese: `README.md`.
+Mihomo menubar helper. Colored icons show the current proxy mode so Global left on is obvious. Left-click opens the dashboard; right-click switches modes. Chinese: `README.md`.
 
-## Icons
+## Usage
 
-| Mode | Style |
-|------|-------|
-| Rule | Template mono CFW cat (eyes kept), follows light/dark |
-| Global | Red (non-template) |
-| Direct | Green (non-template) |
-| Offline | Grey (non-template) |
+1. Open the app from any folder; a Clash cat appears in the menu bar.
+   - **Rule**: template mono CFW cat (eyes kept), follows light/dark
+   - **Global**: red (non-template)
+   - **Direct**: green (non-template)
+   - **Offline**: grey (non-template)
+   - Hover (3 lines when connected, from mihomo `GET /configs`):
+     - Mode: Rule / Global / Direct
+     - Log level: Silent / Error / Warning / Info / Debug (unknown shows —)
+     - TUN: On / Off (`tun.enable`; log maps to `log-level`)
+     - **Connected**: mode / log / TUN; **offline**: short reason (Can't connect / Auth failed / Timed out)
 
-Assets in `Assets/`. Override via `Data/Icons/` with the same names.
+2. Left-click: open `http://127.0.0.1:9090/ui/` (from `panel_url`); tip while `secret` empty — set secret to stop  
+   Right-click menu: (grey status **only when offline**; when connected starts at Open panel)
+   - Open panel → default browser on `panel_url`
+   - Open app → launch `switch_program` from `Data/config.ini`; grey if unset; notify on missing file / launch failure
+   - Rule / Global / Direct → switch mihomo mode (check mark on current)
+   - Quit
 
-## Menu and tip
+3. Polls about every 3 seconds by default; changes elsewhere update icon and hover.  
+4. Single instance. Autostart: set `autostart = true` and restart (default `false`) → `~/Library/LaunchAgents/com.mihomotray.MihomoTray.plist`.
 
-Grey status line at top only when offline → Open panel / Open app → modes → Quit. When connected, menu starts at Open panel (no grey status row).
+## Layout
 
-- Left-click opens `panel_url`; right-click shows the menu; tip while `secret` empty (set `secret` to stop)
-- Hover: when connected — mode / log / TUN; when offline — short reason (Can't connect / Auth failed / Timed out)
+```
+MihomoTray.app/
+Data/config.ini      Config (created on first run)
+Data/Icons/          Optional PNG overrides (defaults in Assets/, 18×18 and @2x)
+```
 
-## Config
+## Config (`Data/config.ini` — restart after edits)
 
-`Data/config.ini` (next to the app; created on first run). Keys: `controller`, `secret`, `panel_url`, `switch_program`, `poll_interval`, `close_connections`, `language`, `autostart` (no `theme`).
+| Key | Meaning |
+|-----|---------|
+| `controller` | external-controller, default `127.0.0.1:9090`, port required; `:9090` / `0.0.0.0:9090` → `127.0.0.1:9090` |
+| `secret` | Access key from mihomo config; ASCII only; whole line is the key; tip when opening panel if empty |
+| `panel_url` | Dashboard URL |
+| `switch_program` | Optional app for “Open app” |
+| `switch_program_args` | Extra args (usually empty) |
+| `poll_interval` | Seconds (default 3) |
+| `close_connections` | Close connections after mode switch (default true) |
+| `language` | `system` / `zh` / `en` |
+| `autostart` | Default false |
 
-Default template uses blank lines between sections. Match `controller` / `secret` / `panel_url` to mihomo. Restart after edits.
-
-**Autostart**: off by default. `autostart = true` writes `~/Library/LaunchAgents/com.mihomotray.MihomoTray.plist`.
+No `theme` (unlike Windows). Deleting `config.ini` regenerates defaults; upgrades append missing keys only.
 
 ## Build (on a Mac)
 
@@ -39,8 +60,19 @@ Default template uses blank lines between sections. Match `controller` / `secret
 
 Needs Xcode or CLT (`swiftc`). Separate Intel and Apple Silicon zips (no universal).
 
-## Version / Actions
+## Version / CI
 
-Marketing `CFBundleShortVersionString` = **1.0.5**; build `CFBundleVersion` = **1.0.5.0** (bump only the 4th segment locally). Workflow `build-mac.yml`; Release on `mac-v*` tags.
+- Marketing `CFBundleShortVersionString` = **1.0.5**
+- Build `CFBundleVersion` = **1.0.5.N** (bump only the 4th segment locally)
+- Actions: `build-mac.yml`; tags `mac-v*`
 
 Unsigned: first open via Finder → Open.
+
+## FAQ
+
+- Trailing `;` / `#` comments OK except on `secret`
+- Bad config keys show a tip and fall back to defaults
+- Grey icon: match `external-controller` / `secret` to mihomo
+- Switch failures notify with the reason
+
+Design: icon colors show mode so Global is hard to forget. Art inspired by Clash for Windows tray cat; red/green/grey are recolors.

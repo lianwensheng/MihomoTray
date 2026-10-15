@@ -1,6 +1,6 @@
 # MihomoTray (macOS) 1.0.5
 
-Menubar helper to switch mihomo mode (Rule / Global / Direct). Chinese: `README.md`.
+Menubar helper to switch mihomo mode (Rule / Global / Direct). Icon colors show the current mode so Global left on is obvious. Chinese: `README.md`.
 
 ## Icons
 
@@ -17,7 +17,7 @@ Assets in `Assets/`. Override via `Data/Icons/` with the same names.
 
 Grey status line at top → Open panel / Open app → modes → Quit.
 
-- Left-click opens `panel_url`; right-click shows the menu; first open shows a tip with the real URL (sidecar `.panel_tip_shown`)
+- Left-click opens `panel_url`; right-click shows the menu; tip while `secret` empty (set `secret` to stop)
 - Hover: when connected — mode / log / TUN; when offline — short reason (Can't connect / Auth failed / Timed out)
 
 ## Config

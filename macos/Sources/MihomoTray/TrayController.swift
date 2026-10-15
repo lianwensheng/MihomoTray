@@ -231,8 +231,8 @@ final class TrayController: NSObject {
     }
 
     @objc func openPanel() {
-        // Claim tip first, open panel immediately, then show tip (does not block the browser).
-        let showTip = AppConfig.tryClaimPanelTip()
+        // Open panel immediately; tip when secret empty/whitespace (does not block the browser).
+        let showTip = cfg.secret.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
         guard let url = URL(string: cfg.panelUrl) else {
             warn(Loc.cantOpenPanel, cfg.panelUrl)
             return

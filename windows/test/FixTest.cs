@@ -62,6 +62,20 @@ class FixTest {
     try{ new MihomoClient("127.0.0.1:19090","密钥").GetMode(); Check(false,"非 ASCII secret 应失败"); }catch(MihomoException e){ Check(e.Message.StartsWith("secret 含有")||e.Message.StartsWith("secret contains"),"非 ASCII secret -> "+e.Message); }
     // A3
     Check(P("secret = \"a\"b\"").Secret=="a\"b", "首尾都是引号：只去外层引号（与老版本一致）");
+    // 面板提示：按 secret 门控；正文首行停提醒；短回退不丢首行
+    Loc.Apply("zh");
+    string tipZh = Loc.PanelTipBody("http://127.0.0.1:9090/ui/");
+    Check(tipZh.StartsWith("配置 secret 安全密钥后停止提醒通知\n") && tipZh.Contains("即将打开 http://127.0.0.1:9090/ui/"), "ZH tip 首行停提醒+URL");
+    Check(!tipZh.EndsWith(".") && !tipZh.EndsWith("。"), "ZH tip 无句末句号");
+    Loc.Apply("en");
+    string tipEn = Loc.PanelTipBody("http://example/ui/");
+    Check(tipEn.StartsWith("Set secret in config.ini to stop this reminder\n") && tipEn.Contains("Opening http://example/ui/"), "EN tip 首行停提醒+URL");
+    string longUrl = "http://127.0.0.1:9090/" + new string('a', 300);
+    string shortTip = Loc.PanelTipBody(longUrl);
+    Check(shortTip == Loc.PanelTipShort && shortTip.StartsWith(Loc.PanelTipStopLine + "\n") && shortTip.Contains("See panel_url in config.ini") && shortTip.Length <= 250, "短回退保留停提醒行");
+    Check(string.IsNullOrWhiteSpace(P("secret =").Secret) && string.IsNullOrWhiteSpace(P("secret =   ").Secret), "空/纯空格 secret → 提示");
+    Check(!string.IsNullOrWhiteSpace(P("secret = abc").Secret), "非空 secret → 不提示");
+    Loc.Apply("zh");
     // A1
     string asc=AppConfig.AsciiOnly(AppConfig.MissingKeysBlock(new[]{"[mihomo]","controller = 1.2.3.4:9090"}, AppConfig.DefaultIniFor("light")));
     bool allAscii=true; foreach(char ch in asc) if(ch>127) allAscii=false;

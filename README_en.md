@@ -2,7 +2,7 @@
 
 Chinese: [README.md](README.md)
 
-Lightweight tray / menu bar helper: the icon color shows whether **mihomo** is in Rule, Global, or Direct mode, with one-click switching from the menu.
+Lightweight tray / menu bar helper: the icon color shows whether **mihomo** is in Rule, Global, or Direct mode (so Global left on is obvious), with one-click switching from the menu.
 
 Windows, macOS, and Linux each use native code with **independent version numbers**, published together from this repo.
 

@@ -242,7 +242,8 @@ class GtkTrayApp:
             self.warn(loc.CantOpenPanel(), str(e) + "\n" + url)
 
     def maybe_show_panel_tip(self):
-        if not config.try_claim_panel_tip():
+        """打开面板：secret 为空或纯空格时每次通知；配了 secret 则不提示。"""
+        if (self.cfg.secret or "").strip():
             return
         self.info(loc.OpenPanel(), loc.PanelTipBody(self.cfg.panel_url))
 

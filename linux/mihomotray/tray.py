@@ -228,8 +228,8 @@ class TrayApp(QObject):
             self.warn(loc.CantOpenPanel(), str(e) + "\n" + url)
 
     def maybe_show_panel_tip(self):
-        """首次打开面板：通知实际 panel_url；config 旁 .panel_tip_shown 只提示一次。"""
-        if not config.try_claim_panel_tip():
+        """打开面板：secret 为空或纯空格时每次通知 panel_url；配了 secret 则不提示。"""
+        if (self.cfg.secret or "").strip():
             return
         self.info(loc.OpenPanel(), loc.PanelTipBody(self.cfg.panel_url))
 

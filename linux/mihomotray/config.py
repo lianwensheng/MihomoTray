@@ -17,8 +17,8 @@ DEFAULT_INI = (
     "; external-controller address — look it up in the mihomo config\n"
     "controller = 127.0.0.1:9090\n"
     "\n"
-    "; external-controller 的 secret，没有就留空（请只用 ASCII 字母、数字和符号）\n"
-    "; secret for external-controller (leave empty if none; ASCII letters/digits/symbols only)\n"
+    "; external-controller 的 secret，此安全密钥在 mihomo 配置后查询并填入（请只用 ASCII 字母、数字和符号）\n"
+    "; external-controller secret — look up this access key in your mihomo config and fill it in (ASCII letters, digits, and symbols only)\n"
     "secret = \n"
     "\n"
     "; 点击“打开面板”时打开的网址，自定义网址在 mihomo 配置里查询并更换\n"
@@ -63,25 +63,6 @@ def data_dir():
 
 def ini_path():
     return os.path.join(data_dir(), "config.ini")
-
-
-def panel_tip_marker_path():
-    """Sidecar next to config.ini for one-time first-open panel tip (not written into ini)."""
-    return os.path.join(data_dir(), ".panel_tip_shown")
-
-
-def try_claim_panel_tip():
-    """Return True once: create marker; False if already shown or cannot write."""
-    path = panel_tip_marker_path()
-    try:
-        if os.path.isfile(path):
-            return False
-        os.makedirs(data_dir(), exist_ok=True)
-        with open(path, "w", encoding="utf-8") as f:
-            f.write("1\n")
-        return True
-    except OSError:
-        return False
 
 
 def icons_dir():

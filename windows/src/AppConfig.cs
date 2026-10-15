@@ -33,8 +33,8 @@ namespace MihomoTray
 "; external-controller address — look it up in the mihomo config\r\n" +
 "controller = 127.0.0.1:9090\r\n" +
 "\r\n" +
-"; external-controller 的 secret，没有就留空（请只用 ASCII 字母、数字和符号）\r\n" +
-"; secret for external-controller (leave empty if none; ASCII letters/digits/symbols only)\r\n" +
+"; external-controller 的 secret，此安全密钥在 mihomo 配置后查询并填入（请只用 ASCII 字母、数字和符号）\r\n" +
+"; external-controller secret — look up this access key in your mihomo config and fill it in (ASCII letters, digits, and symbols only)\r\n" +
 "secret = \r\n" +
 "\r\n" +
 "; 点击“打开面板”时打开的网址，自定义网址在 mihomo 配置里查询并更换\r\n" +
@@ -96,27 +96,6 @@ namespace MihomoTray
         public static string IniPath
         {
             get { return Path.Combine(DataDir, "config.ini"); }
-        }
-
-        /// <summary>config.ini 旁的一次性标记：首次「打开面板」提示用，不写入用户 ini。</summary>
-        public static string PanelTipMarkerPath
-        {
-            get { return Path.Combine(Directory.Exists(DataDir) ? DataDir : ExeDir, ".panel_tip_shown"); }
-        }
-
-        /// <summary>若尚未提示过则写入标记并返回 true；已提示或无法写入则返回 false（避免反复弹）。</summary>
-        public static bool TryClaimPanelTip()
-        {
-            try
-            {
-                string path = PanelTipMarkerPath;
-                if (File.Exists(path)) return false;
-                string dir = Path.GetDirectoryName(path);
-                if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir)) Directory.CreateDirectory(dir);
-                File.WriteAllText(path, "1");
-                return true;
-            }
-            catch { return false; }
         }
 
         /// <summary>建好 Data 文件夹；旧版本放在 exe 旁边的 config.ini 挪进 Data（Data 里已有就不动）。失败返回 false。</summary>

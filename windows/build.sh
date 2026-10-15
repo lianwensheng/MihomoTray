@@ -51,14 +51,26 @@ fi
 ZIP="MihomoTray_windows_${ARTIFACT_VER}.zip"
 rm -f "$ZIP"
 python3 - "$ZIP" <<'PY'
-import sys, zipfile
+import sys, zipfile, re
 from pathlib import Path
 zip_path = Path(sys.argv[1])
 root = Path("dist")
+# zip 内 Data/config.ini 始终用当前 AppConfig 默认模板，避免 dist 里旧文件进包；
+# 日常本地 dist/Data/config.ini 仍可不强制覆盖（上面 cfg 无 --force）
+src = Path("src/AppConfig.cs").read_text(encoding="utf-8")
+m = re.search(r"DefaultIni =\s*(.*?);\s*\n\s*public static string DefaultIniFor", src, re.S).group(1)
+s = "".join(re.findall(r'"((?:[^"\\]|\\.)*)"', m))
+s = re.sub(r"\\(.)", lambda x: {"r": "\r", "n": "\n", '"': '"', "\\": "\\"}[x.group(1)], s)
+s = s.replace("{theme}", "light")
+default_ini = ("\ufeff" + s).encode("utf-8")
 with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as z:
     for f in sorted(root.rglob("*")):
         if f.is_file():
-            z.write(f, f.relative_to(root).as_posix())
-print("packed", zip_path)
+            arc = f.relative_to(root).as_posix()
+            if arc == "Data/config.ini":
+                continue
+            z.write(f, arc)
+    z.writestr("Data/config.ini", default_ini)
+print("packed", zip_path, "(Data/config.ini from AppConfig default)")
 PY
 echo "packed $ZIP (product $PRODUCT file $FILEVER)"

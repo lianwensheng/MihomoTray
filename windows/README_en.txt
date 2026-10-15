@@ -1,7 +1,7 @@
 MihomoTray (Windows) 2.1.8
 ==========================
 
-Tray helper to switch mihomo mode: Rule / Global / Direct.
+Tray helper: icon color shows Rule / Global / Direct so you notice if Global was left on.
 
 Icons
 -----
@@ -9,7 +9,7 @@ Rule = original cat, Global = red, Direct = green, Offline = grey
 
 Usage
 -----
-Left-click   Open dashboard (panel_url); first time shows a tip with the real URL (sidecar .panel_tip_shown)
+Left-click   Open dashboard (panel_url); tip while secret empty (set secret to stop)
 Right-click  Menu: status (grey) | Open panel / Open app | modes | Exit
 Hover        When connected: mode / log / TUN; when offline: short reason
              (Can't connect / Auth failed / Timed out)

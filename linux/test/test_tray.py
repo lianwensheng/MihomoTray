@@ -73,18 +73,24 @@ class LocTest(unittest.TestCase):
 
     def test_panel_tip_body(self):
         loc.apply("zh")
-        self.assertEqual(loc.PanelTipBody("http://127.0.0.1:9090/ui/"),
-                         "即将打开 http://127.0.0.1:9090/ui/\n可在 config.ini 的 panel_url 修改")
+        zh = loc.PanelTipBody("http://127.0.0.1:9090/ui/")
+        self.assertTrue(zh.startswith("配置 secret 安全密钥后停止提醒通知\n"), zh)
+        self.assertIn("即将打开 http://127.0.0.1:9090/ui/", zh)
+        self.assertIn("可在 config.ini 的 panel_url 修改", zh)
         loc.apply("en")
-        self.assertEqual(loc.PanelTipBody("http://example/ui/"),
-                         "Opening http://example/ui/\nChange panel_url in config.ini")
+        en = loc.PanelTipBody("http://example/ui/")
+        self.assertTrue(en.startswith("Set secret in config.ini to stop this reminder\n"), en)
+        self.assertIn("Opening http://example/ui/", en)
+        self.assertIn("Change panel_url in config.ini", en)
         long_url = "http://127.0.0.1:9090/" + ("a" * 300)
         for lang in ("zh", "en"):
             loc.apply(lang)
             s = loc.PanelTipBody("http://x/")
+            self.assertTrue(s.startswith(loc.PanelTipStopLine() + "\n"), s)
             self.assertFalse(s.endswith((".", "。")), s)
             short = loc.PanelTipBody(long_url)
             self.assertEqual(short, loc.PanelTipShort())
+            self.assertTrue(short.startswith(loc.PanelTipStopLine() + "\n"), short)
             self.assertLessEqual(len(short), 250)
             self.assertFalse(short.endswith((".", "。")), short)
 
@@ -180,13 +186,15 @@ class ConfigTest(unittest.TestCase):
         c = config.load(); self.assertEqual(c.secret, "ro"); self.assertEqual(open(p).read(), "secret = ro\n")
         os.chmod(p, 0o644); os.remove(p)
 
-    def test_panel_tip_claim(self):
-        m = config.panel_tip_marker_path()
-        if os.path.exists(m): os.remove(m)
-        self.assertTrue(config.try_claim_panel_tip())
-        self.assertTrue(os.path.isfile(m))
-        self.assertFalse(config.try_claim_panel_tip())
-        os.remove(m)
+    def test_panel_tip_secret_gate(self):
+        """空/纯空格 secret → 应提示；非空 → 不提示（与 tray/gtk 逻辑一致）。"""
+        self.assertFalse(("" or "").strip())
+        self.assertFalse(("   " or "").strip())
+        self.assertTrue(("abc" or "").strip())
+        # 解析后的 secret 字段同样适用
+        self.assertFalse((self.P("secret = ").secret or "").strip())
+        self.assertFalse((self.P("secret =    ").secret or "").strip())
+        self.assertTrue((self.P("secret = abc").secret or "").strip())
 
 
 class ClientTest(Base):

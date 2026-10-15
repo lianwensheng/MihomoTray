@@ -54,16 +54,21 @@ namespace MihomoTray
         public static string SwitchFailed { get { return En ? "Switch failed" : "切换失败"; } }
         public static string ControllerLabel { get { return En ? "Controller: " : "控制器："; } }
         public static string CantOpenPanel { get { return En ? "Couldn't open dashboard" : "无法打开面板"; } }
-        /// <summary>超长 URL 时气泡短回退（无句末句号）。</summary>
-        public static string PanelTipShort { get { return En ? "See panel_url in config.ini" : "见 config.ini 的 panel_url"; } }
-        /// <summary>首次打开面板的气泡正文（含实际 panel_url；超长则短回退；无句末句号）。</summary>
+        /// <summary>面板提示首行：提醒配置 secret 后停止（无句末句号）。</summary>
+        public static string PanelTipStopLine { get { return En ? "Set secret in config.ini to stop this reminder" : "配置 secret 安全密钥后停止提醒通知"; } }
+        /// <summary>超长 URL 时短回退：保留停提醒行 + panel_url 提示（无句末句号）。</summary>
+        public static string PanelTipShort
+        {
+            get { return PanelTipStopLine + "\n" + (En ? "See panel_url in config.ini" : "见 config.ini 的 panel_url"); }
+        }
+        /// <summary>打开面板气泡：首行停提醒，再跟 panel_url；超长则短回退（无句末句号）。</summary>
         public static string PanelTipBody(string url)
         {
             string u = url ?? "";
             string full = En
-                ? ("Opening " + u + "\nChange panel_url in config.ini")
-                : ("即将打开 " + u + "\n可在 config.ini 的 panel_url 修改");
-            // NotifyIcon 气泡正文约 250 字；超长时保留可操作提示，避免裁掉第二行
+                ? (PanelTipStopLine + "\nOpening " + u + "\nChange panel_url in config.ini")
+                : (PanelTipStopLine + "\n即将打开 " + u + "\n可在 config.ini 的 panel_url 修改");
+            // NotifyIcon 气泡正文约 250 字；超长时仍保留停提醒行，避免被挤掉
             return full.Length <= 250 ? full : PanelTipShort;
         }
         public static string CantOpenApp { get { return En ? "Couldn't open app" : "无法切换程序"; } }

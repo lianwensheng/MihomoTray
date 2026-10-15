@@ -1,6 +1,6 @@
 # MihomoTray (Linux) 1.0.3
 
-Tray helper for mihomo mode (Rule / Global / Direct). Chinese: `README.md`.
+Tray helper for mihomo mode (Rule / Global / Direct); icon color shows the mode so Global left on is obvious. Chinese: `README.md`.
 
 ## Variants
 
@@ -19,7 +19,7 @@ Grey icon when offline. Hover (if any) and the grey menu line show:
 
 When connected, the grey line shows the current mode. No spammy desktop notifications.
 
-First open of the dashboard shows a tip with the actual `panel_url` (sidecar `~/.config/MihomoTray/.panel_tip_shown`, once only).
+Opening the dashboard while `secret` is empty shows a tip with the actual `panel_url` (set `secret` to stop).
 
 ## Config
 

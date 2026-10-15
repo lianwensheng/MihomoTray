@@ -267,10 +267,10 @@ namespace MihomoTray
             });
         }
 
-        /// <summary>首次打开面板：气泡提示实际 panel_url，旁路 .panel_tip_shown 只提示一次（菜单/左键共用）。</summary>
+        /// <summary>打开面板：secret 为空或纯空格时每次气泡提示 panel_url；配了 secret 则不提示。</summary>
         private void MaybeShowPanelTip()
         {
-            if (!AppConfig.TryClaimPanelTip()) return;
+            if (!string.IsNullOrWhiteSpace(_cfg.Secret)) return;
             Info(Loc.OpenPanel, Loc.PanelTipBody(_cfg.PanelUrl));
         }
 

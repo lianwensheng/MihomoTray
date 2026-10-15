@@ -6,6 +6,6 @@ using System.Reflection;
 [assembly: AssemblyTitle("MihomoTray")]                 // 文件说明
 [assembly: AssemblyProduct("MihomoTray")]               // 产品名称
 [assembly: AssemblyCopyright("Copyright © 2026 WSW")]   // 版权
-[assembly: AssemblyVersion("2.1.8.1")]
-[assembly: AssemblyFileVersion("2.1.8.1")]              // 文件版本 x.y.z.N（本地小改只加 N）
+[assembly: AssemblyVersion("2.1.8.2")]
+[assembly: AssemblyFileVersion("2.1.8.2")]              // 文件版本 x.y.z.N（本地小改只加 N）
 [assembly: AssemblyInformationalVersion("2.1.8")]       // 产品版本 x.y.z（发版才动；UA 用这个）

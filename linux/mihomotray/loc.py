@@ -84,13 +84,19 @@ def BadConfig(): return _("Invalid config.ini", "config.ini 有误")
 def SwitchFailed(): return _("Switch failed", "切换失败")
 def ControllerLabel(): return _("Controller: ", "控制器：")
 def CantOpenPanel(): return _("Couldn't open dashboard", "无法打开面板")
+def PanelTipStopLine():
+    return _("Set secret in config.ini to stop this reminder", "配置 secret 安全密钥后停止提醒通知")
+
+
 def PanelTipShort():
-    return _("See panel_url in config.ini", "见 config.ini 的 panel_url")
+    return PanelTipStopLine() + "\n" + _("See panel_url in config.ini", "见 config.ini 的 panel_url")
 
 
 def PanelTipBody(url):
     full = _("Opening " + url + "\nChange panel_url in config.ini",
              "即将打开 " + url + "\n可在 config.ini 的 panel_url 修改")
+    # 首行停提醒；超长时短回退仍保留停提醒行
+    full = PanelTipStopLine() + "\n" + full
     return full if len(full) <= 250 else PanelTipShort()
 def CantOpenApp(): return _("Couldn't open app", "无法切换程序")
 def SwitchNotSet(): return _("switch_program is not set in config.ini", "config.ini 中没有设置 switch_program")

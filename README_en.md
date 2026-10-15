@@ -15,7 +15,7 @@ Windows, macOS, and Linux each use native code with **independent version number
 | Linux | [linux/](linux/) | 1.0.3 | Qt AppImage + GTK `.deb` / `.rpm` / `.tar.gz` |
 
 Windows and Linux share the same icon style: Rule = original blue cat, Global = red, Direct = green, Offline = grey  
-macOS uses template monochrome icons: Rule = black/white cat, Global = red, Direct = green, Offline = grey
+macOS mixes template icons: Rule = black/white cat, Global = red, Direct = green, Offline = grey
 
 When the controller is unreachable the icon stays grey; the hover tip and the grey status line at the top of the menu distinguish **Can't connect** / **Auth failed** / **Timed out** (other/unknown cases show "**Disconnected**"). On Linux GTK (no hover), rely on the grey menu line.
 

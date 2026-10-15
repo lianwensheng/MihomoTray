@@ -78,10 +78,15 @@ class LocTest(unittest.TestCase):
         loc.apply("en")
         self.assertEqual(loc.PanelTipBody("http://example/ui/"),
                          "Opening http://example/ui/\nChange panel_url in config.ini")
+        long_url = "http://127.0.0.1:9090/" + ("a" * 300)
         for lang in ("zh", "en"):
             loc.apply(lang)
             s = loc.PanelTipBody("http://x/")
             self.assertFalse(s.endswith((".", "。")), s)
+            short = loc.PanelTipBody(long_url)
+            self.assertEqual(short, loc.PanelTipShort())
+            self.assertLessEqual(len(short), 250)
+            self.assertFalse(short.endswith((".", "。")), short)
 
     def test_windows_loc_text(self):
         """逐条比对 Windows 版 Loc.cs 里同名文案（合仓 windows/ 或旧旁挂目录）。"""

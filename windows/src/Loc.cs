@@ -54,13 +54,17 @@ namespace MihomoTray
         public static string SwitchFailed { get { return En ? "Switch failed" : "切换失败"; } }
         public static string ControllerLabel { get { return En ? "Controller: " : "控制器："; } }
         public static string CantOpenPanel { get { return En ? "Couldn't open dashboard" : "无法打开面板"; } }
-        /// <summary>首次打开面板的气泡正文（含实际 panel_url；无句末句号）。</summary>
+        /// <summary>超长 URL 时气泡短回退（无句末句号）。</summary>
+        public static string PanelTipShort { get { return En ? "See panel_url in config.ini" : "见 config.ini 的 panel_url"; } }
+        /// <summary>首次打开面板的气泡正文（含实际 panel_url；超长则短回退；无句末句号）。</summary>
         public static string PanelTipBody(string url)
         {
             string u = url ?? "";
-            return En
+            string full = En
                 ? ("Opening " + u + "\nChange panel_url in config.ini")
                 : ("即将打开 " + u + "\n可在 config.ini 的 panel_url 修改");
+            // NotifyIcon 气泡正文约 250 字；超长时保留可操作提示，避免裁掉第二行
+            return full.Length <= 250 ? full : PanelTipShort;
         }
         public static string CantOpenApp { get { return En ? "Couldn't open app" : "无法切换程序"; } }
         public static string SwitchNotSet { get { return En ? "switch_program is not set in config.ini" : "config.ini 中没有设置 switch_program"; } }

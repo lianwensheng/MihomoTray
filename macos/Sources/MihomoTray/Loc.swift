@@ -53,11 +53,16 @@ enum Loc {
     static var switchFailed: String { en ? "Switch failed" : "切换失败" }
     static var controllerLabel: String { en ? "Controller: " : "控制器：" }
     static var cantOpenPanel: String { en ? "Couldn't open dashboard" : "无法打开面板" }
-    /// First-open dashboard tip body (actual panel_url; no trailing period).
+    /// Short fallback when panel_url is too long for the tip (no trailing period).
+    static var panelTipShort: String {
+        en ? "See panel_url in config.ini" : "见 config.ini 的 panel_url"
+    }
+    /// First-open dashboard tip body (actual panel_url; long URL → short fallback; no trailing period).
     static func panelTipBody(_ url: String) -> String {
-        en
+        let full = en
             ? "Opening \(url)\nChange panel_url in config.ini"
             : "即将打开 \(url)\n可在 config.ini 的 panel_url 修改"
+        return full.count <= 250 ? full : panelTipShort
     }
     static var cantOpenApp: String { en ? "Couldn't open app" : "无法切换程序" }
     static var switchNotSet: String {

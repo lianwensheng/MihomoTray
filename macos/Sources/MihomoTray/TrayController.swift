@@ -231,7 +231,8 @@ final class TrayController: NSObject {
     }
 
     @objc func openPanel() {
-        maybeShowPanelTip()
+        // Claim tip first, open panel immediately, then show tip (does not block the browser).
+        let showTip = AppConfig.tryClaimPanelTip()
         guard let url = URL(string: cfg.panelUrl) else {
             warn(Loc.cantOpenPanel, cfg.panelUrl)
             return
@@ -239,12 +240,9 @@ final class TrayController: NSObject {
         if !NSWorkspace.shared.open(url) {
             warn(Loc.cantOpenPanel, cfg.panelUrl)
         }
-    }
-
-    /// First open of the dashboard: non-blocking notification with actual panel_url; marker beside config.
-    private func maybeShowPanelTip() {
-        guard AppConfig.tryClaimPanelTip() else { return }
-        tip(Loc.openPanel, Loc.panelTipBody(cfg.panelUrl))
+        if showTip {
+            tip(Loc.openPanel, Loc.panelTipBody(cfg.panelUrl))
+        }
     }
 
     @objc private func launchSwitchProgram() {
@@ -296,15 +294,22 @@ final class TrayController: NSObject {
         alert.runModal()
     }
 
-    /// Non-blocking first-run tip (avoid modal so the panel still opens immediately).
+    /// First-run tip: informational alert on next run-loop turn so openPanel is not blocked.
+    /// Avoids deprecated NSUserNotification (unreliable on newer macOS without extra entitlements).
     private func tip(_ title: String, _ text: String) {
         if disposed { return }
-        var t = text
-        if t.count > 250 { t = String(t.prefix(247)) + "..." }
-        let n = NSUserNotification()
-        n.title = title
-        n.informativeText = t
-        NSUserNotificationCenter.default.deliver(n)
+        var body = text
+        if body.count > 250 { body = String(body.prefix(247)) + "..." }
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self, !self.disposed else { return }
+            let alert = NSAlert()
+            alert.messageText = title
+            alert.informativeText = body
+            alert.alertStyle = .informational
+            alert.addButton(withTitle: "OK")
+            NSApp.activate(ignoringOtherApps: true)
+            alert.runModal()
+        }
     }
 
     @objc func quit() {

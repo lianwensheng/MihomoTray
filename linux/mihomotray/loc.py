@@ -84,9 +84,14 @@ def BadConfig(): return _("Invalid config.ini", "config.ini 有误")
 def SwitchFailed(): return _("Switch failed", "切换失败")
 def ControllerLabel(): return _("Controller: ", "控制器：")
 def CantOpenPanel(): return _("Couldn't open dashboard", "无法打开面板")
+def PanelTipShort():
+    return _("See panel_url in config.ini", "见 config.ini 的 panel_url")
+
+
 def PanelTipBody(url):
-    return _("Opening " + url + "\nChange panel_url in config.ini",
+    full = _("Opening " + url + "\nChange panel_url in config.ini",
              "即将打开 " + url + "\n可在 config.ini 的 panel_url 修改")
+    return full if len(full) <= 250 else PanelTipShort()
 def CantOpenApp(): return _("Couldn't open app", "无法切换程序")
 def SwitchNotSet(): return _("switch_program is not set in config.ini", "config.ini 中没有设置 switch_program")
 def FileNotFound(path): return _("File not found: " + path + "\nCheck switch_program in config.ini", "找不到文件：" + path + "\n请检查 config.ini 中的 switch_program")

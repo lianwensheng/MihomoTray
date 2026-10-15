@@ -217,7 +217,7 @@ namespace MihomoTray
             return Loc.Disconnected;
         }
 
-                private void SetTip(string t)
+        private void SetTip(string t)
         {
             if (_disposed) return;
             if (t.Length > 63) t = t.Substring(0, 63);

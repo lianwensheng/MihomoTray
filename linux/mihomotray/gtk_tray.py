@@ -1,5 +1,5 @@
 """托盘图标与菜单（GTK3 + AyatanaAppIndicator3，可选回退 AppIndicator3）。
-点击托盘只弹菜单（无单独左键动作）；AppIndicator 无悬停提示，不在菜单顶部加模式文字。"""
+点击托盘只弹菜单（无单独左键动作）；AppIndicator 无悬停提示；菜单顶灰字仅断连时显示。"""
 import os
 import subprocess
 import sys
@@ -94,8 +94,9 @@ class GtkTrayApp:
         self.act_exit = Gtk.MenuItem(label=loc.Exit())
         self.act_exit.connect("activate", lambda *_: self.quit())
 
+        self.sep_status = Gtk.SeparatorMenuItem()  # 与 act_status 一起：仅断连时显示
         self.menu.append(self.act_status)
-        self.menu.append(Gtk.SeparatorMenuItem())
+        self.menu.append(self.sep_status)
         for w in (self.act_panel, self.act_app):
             self.menu.append(w)
         self.menu.append(Gtk.SeparatorMenuItem())
@@ -104,6 +105,7 @@ class GtkTrayApp:
         self.menu.append(Gtk.SeparatorMenuItem())
         self.menu.append(self.act_exit)
         self.menu.show_all()
+        self._sync_status_row()
         self.menu.connect("show", lambda *_: self.poll())
         self.indicator.set_menu(self.menu)
 
@@ -177,6 +179,7 @@ class GtkTrayApp:
             self.act_status.set_label(self.status_text)
         except Exception:
             pass
+        self._sync_status_row()
         for m, a in self.act_modes.items():
             a.set_sensitive(self.connected)
             a.handler_block(self._mode_handler_ids[m])
@@ -184,6 +187,15 @@ class GtkTrayApp:
                 a.set_active(self.connected and self.mode == m)
             finally:
                 a.handler_unblock(self._mode_handler_ids[m])
+
+    def _sync_status_row(self):
+        """连上后隐藏顶部灰字与紧挨的分隔线；断连时显示。"""
+        if self.connected:
+            self.act_status.hide()
+            self.sep_status.hide()
+        else:
+            self.act_status.show()
+            self.sep_status.show()
 
     def set_icon(self, key):
         if key == self.icon_key:
@@ -312,9 +324,11 @@ class GtkTrayApp:
             pass
 
     def menu_labels(self):
-        """测试用：菜单项文字顺序（分隔符为空串）。"""
+        """测试用：可见菜单项文字顺序（分隔符为空串；连上后不含顶部状态行）。"""
         out = []
         for child in self.menu.get_children():
+            if not child.get_visible():
+                continue
             if isinstance(child, Gtk.SeparatorMenuItem):
                 out.append("")
             else:

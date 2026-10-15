@@ -10,7 +10,7 @@ Rule = original cat, Global = red, Direct = green, Offline = grey
 Usage
 -----
 Left-click   Open dashboard (panel_url); tip while secret empty (set secret to stop)
-Right-click  Menu: status (grey) | Open panel / Open app | modes | Exit
+Right-click  Menu: grey status only when offline; when connected starts at Open panel | Open app | modes | Exit
 Hover        When connected: mode / log / TUN; when offline: short reason
              (Can't connect / Auth failed / Timed out)
 

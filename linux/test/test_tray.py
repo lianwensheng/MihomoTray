@@ -288,7 +288,9 @@ class TrayTest(Base):
         MihomoClient("127.0.0.1:%d" % self.port, "").set_mode("rule")
         t = self.make(self.port)
         self.assertTrue(self.wait(lambda: t.connected))
-        self.assertEqual([a.text() for a in t.menu.actions()], ["规则模式", "", "打开面板", "切换程序", "", "规则模式", "全局模式", "直连模式", "", "退出"])
+        # 已连接：顶部灰字状态行隐藏，菜单从「打开面板」起
+        self.assertEqual([a.text() for a in t.menu.actions() if a.isVisible()],
+                         ["打开面板", "切换程序", "", "规则模式", "全局模式", "直连模式", "", "退出"])
         self.assertFalse(t.act_app.isEnabled())
         self.assertEqual(t.icon_key, "rule"); self.assertTrue(t.act_modes["rule"].isChecked())
         self.assertEqual(t.tray.toolTip(), "模式 : 规则模式\n日志级别 : 信息\n虚拟网卡 : 关闭")
@@ -310,6 +312,8 @@ class TrayTest(Base):
         self.assertFalse(t.connected); self.assertEqual(t.icon_key, "offline")
         self.assertEqual(t.tray.toolTip(), "无法连接")
         self.assertEqual(t.status_text, "无法连接")
+        self.assertTrue(t.act_status.isVisible() and t.sep_status.isVisible())
+        self.assertEqual([a.text() for a in t.menu.actions() if a.isVisible()][:2], ["无法连接", ""])
         self.assertTrue(all(not a.isEnabled() for a in t.act_modes.values()))
         t.switch_mode("global")
         self.assertTrue(self.wait(lambda: t.warnings))
@@ -384,7 +388,8 @@ class GtkTrayTest(Base):
         MihomoClient("127.0.0.1:%d" % self.port, "").set_mode("rule")
         t = self.make(self.port)
         self.assertTrue(self.wait(lambda: t.connected))
-        self.assertEqual(t.menu_labels(), ["规则模式", "", "打开面板", "切换程序", "", "规则模式", "全局模式", "直连模式", "", "退出"])
+        # 已连接：顶部灰字状态行隐藏
+        self.assertEqual(t.menu_labels(), ["打开面板", "切换程序", "", "规则模式", "全局模式", "直连模式", "", "退出"])
         self.assertFalse(t.act_app.get_sensitive())
         self.assertEqual(t.icon_key, "rule")
         t.switch_mode("global")
@@ -400,6 +405,7 @@ class GtkTrayTest(Base):
         self.assertFalse(t.connected)
         self.assertEqual(t.icon_key, "offline")
         self.assertEqual(t.status_text, "无法连接")
+        self.assertEqual(t.menu_labels()[:2], ["无法连接", ""])
         t.switch_mode("global")
         self.assertTrue(self.wait(lambda: t.warnings))
         self.assertEqual(t.warnings[0][0], "切换失败")

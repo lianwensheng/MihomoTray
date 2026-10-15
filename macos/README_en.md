@@ -15,7 +15,7 @@ Assets in `Assets/`. Override via `Data/Icons/` with the same names.
 
 ## Menu and tip
 
-Grey status line at top → Open panel / Open app → modes → Quit.
+Grey status line at top only when offline → Open panel / Open app → modes → Quit. When connected, menu starts at Open panel (no grey status row).
 
 - Left-click opens `panel_url`; right-click shows the menu; tip while `secret` empty (set `secret` to stop)
 - Hover: when connected — mode / log / TUN; when offline — short reason (Can't connect / Auth failed / Timed out)

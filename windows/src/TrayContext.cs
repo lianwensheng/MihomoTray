@@ -23,7 +23,7 @@ namespace MihomoTray
         private int _polling;          // 0/1，防止请求堆积
         private string _mode;          // 最近一次读到的模式
         private bool _connected;
-        private string _statusText = Loc.Disconnected;  // 悬停 / 菜单灰字短状态
+        private string _statusText = Loc.Disconnected;  // 悬停短状态；断连时也作菜单顶灰字
         private bool _disposed;        // Quit() 之后为 true，晚到的回调直接忽略
         private int _switchSeq;        // 每次切换模式 +1，只采用最新一次切换的结果
         private int _switching;        // 正在切换时丢弃轮询结果，避免旧模式把新模式覆盖回去
@@ -140,12 +140,16 @@ namespace MihomoTray
             }
         }
 
-        /// <summary>右键菜单内容：打开面板、切换程序 | 三个模式（当前模式打对勾）| 退出。</summary>
+        /// <summary>右键菜单：断连时顶栏灰字 + 分隔线；已连接从打开面板起 | 切换程序 | 三模式（打勾）| 退出。</summary>
         private List<FlClashMenu.Entry> BuildMenuEntries()
         {
             var list = new List<FlClashMenu.Entry>();
-            list.Add(new FlClashMenu.Entry { Text = _statusText, Enabled = false });
-            list.Add(new FlClashMenu.Entry());
+            // 仅断连时显示顶部灰字状态 + 分隔线；连上后菜单从「打开面板」起
+            if (!_connected)
+            {
+                list.Add(new FlClashMenu.Entry { Text = _statusText, Enabled = false });
+                list.Add(new FlClashMenu.Entry());
+            }
             list.Add(new FlClashMenu.Entry { Text = Loc.OpenPanel, OnClick = OpenPanel });
             list.Add(new FlClashMenu.Entry { Text = Loc.SwitchProgram, Enabled = _cfg.HasSwitchProgram, OnClick = LaunchSwitchProgram });
             list.Add(new FlClashMenu.Entry());

@@ -79,7 +79,7 @@ class TrayApp(QObject):
         self.act_exit = QAction(loc.Exit(), self.menu)
         self.act_exit.triggered.connect(self.quit)
         self.menu.addAction(self.act_status)
-        self.menu.addSeparator()
+        self.sep_status = self.menu.addSeparator()  # 与 act_status 一起：仅断连时显示
         self.menu.addAction(self.act_panel)
         self.menu.addAction(self.act_app)
         self.menu.addSeparator()
@@ -87,6 +87,7 @@ class TrayApp(QObject):
             self.menu.addAction(self.act_modes[m])
         self.menu.addSeparator()
         self.menu.addAction(self.act_exit)
+        self._sync_status_row()
 
         self.tray = tray_cls(self.icons["offline"])
         self.tray.setContextMenu(self.menu)
@@ -167,9 +168,16 @@ class TrayApp(QObject):
             self.set_icon(key)
             self.set_tip(tray_tip(True, st.mode, st.tun_enabled, st.log_level))
         self.act_status.setText(self.status_text)
+        self._sync_status_row()
         for m, a in self.act_modes.items():
             a.setEnabled(self.connected)
             a.setChecked(self.connected and self.mode == m)
+
+    def _sync_status_row(self):
+        """连上后隐藏顶部灰字与紧挨的分隔线；断连时显示。"""
+        show = not self.connected
+        self.act_status.setVisible(show)
+        self.sep_status.setVisible(show)
 
     def set_icon(self, key):
         if key != self.icon_key:

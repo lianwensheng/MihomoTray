@@ -131,9 +131,12 @@ final class TrayController: NSObject {
         menu.removeAllItems()
         menu.autoenablesItems = false
 
-        let status = menu.addItem(withTitle: statusText, action: nil, keyEquivalent: "")
-        status.isEnabled = false
-        menu.addItem(.separator())
+        // Offline only: grey status + separator; when connected start at Open Panel
+        if !connected {
+            let status = menu.addItem(withTitle: statusText, action: nil, keyEquivalent: "")
+            status.isEnabled = false
+            menu.addItem(.separator())
+        }
 
         let dash = menu.addItem(withTitle: Loc.openPanel, action: #selector(openPanel), keyEquivalent: "")
         dash.target = self

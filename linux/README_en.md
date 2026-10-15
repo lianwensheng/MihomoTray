@@ -7,17 +7,17 @@ Tray helper for mihomo mode (Rule / Global / Direct); icon color shows the mode 
 | Variant | Artifacts | Notes |
 |---------|-----------|-------|
 | **Qt (slim AppImage)** | `MihomoTray_linux_qt_1.0.3_x86_64.AppImage` | ~46MB; left-click panel on KDE/XFCE; hover tip when the desktop supports it |
-| **GTK (light)** | `.deb` / `.rpm` / `.tar.gz` | Tiny; menu-first; **no hover** — use the grey status line at the top of the menu |
+| **GTK (light)** | `.deb` / `.rpm` / `.tar.gz` | Tiny; menu-first; **no hover** — when offline, use the grey status line at the top of the menu |
 
 ## Status text
 
-Grey icon when offline. Hover (if any) and the grey menu line show:
+Grey icon when offline. Hover (if any) and the grey menu line (offline only) show:
 
 - **Can't connect** — bad controller host/port or mihomo down
 - **Auth failed** — secret mismatch
 - **Timed out** — controller not responding
 
-When connected, the grey line shows the current mode. No spammy desktop notifications.
+When connected, the grey status row is hidden; mode is shown by icon color and hover. No spammy desktop notifications.
 
 Opening the dashboard while `secret` is empty shows a tip with the actual `panel_url` (set `secret` to stop).
 

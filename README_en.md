@@ -15,16 +15,17 @@ Windows, macOS, and Linux each use native code with **independent version number
 | Linux | [linux/](linux/) | 1.0.3 | Qt AppImage + GTK `.deb` / `.rpm` / `.tar.gz` |
 
 Windows and Linux share the same icon style: Rule = original blue cat, Global = red, Direct = green, Offline = grey.
+
 macOS uses template monochrome icons: Rule = black/white cat, Global = red, Direct = green, Offline = grey.
 
 When the controller is unreachable the icon stays grey; the hover tip and the grey status line at the top of the menu distinguish **Can't connect** / **Auth failed** / **Timed out** (other/unknown cases show "Disconnected"). On Linux GTK (no hover), rely on the grey menu line.
 
-Icons can be customized. For install, config, and menu details see each platform's `README.md` (Chinese) and `README_en` (English).
+Icons can be customized. For install, config, and menu details see each platform's `README.md` (Chinese) and `README_en.md` (English).
 
 ## Config
 
 On first run a `config.ini` is created (Windows / macOS: `Data/` next to the app; Linux: `~/.config/MihomoTray/`).
-The default template uses blank lines between sections; comments explain how to fill `controller` / `secret` / `panel_url` from mihomo's own external-controller settings.
+The default template uses blank lines between sections; comments explain how to fill controller / secret / panel_url from the mihomo config file
 `theme` is Windows-only. Restart this app after editing the config.
 
 ## Build from source

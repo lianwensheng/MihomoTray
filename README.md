@@ -15,16 +15,17 @@ Windows、macOS、Linux 各用原生代码，**版本号各自独立**，合在�
 | Linux | [linux/](linux/) | 1.0.3 | Qt AppImage + GTK 的 `.deb` / `.rpm` / `.tar.gz` |
 
 Windows 版与 Linux 版图标一致：规则 = 原色蓝猫、全局 = 红、直连 = 绿、未连接 = 灰
+
 macOS 版是 template 单色图标：规则 = 单色黑/白猫、全局 = 红、直连 = 绿、未连接 = 灰
 
 连不上控制器时图标仍为灰色；悬停提示与菜单顶部灰字会区分 **无法连接** / **鉴权失败** / **连接超时**（其它/未知显示「未连接」）。Linux GTK 无悬停时主要看菜单灰字。
 
-图标可自定义修改，更细的安装、配置、菜单说明见各目录里的 `README.md`（中文）和 `README_en`（英文）。
+图标可自定义修改，更细的安装、配置、菜单说明见各目录里的 `README.md`（中文）和 `README_en.md`（英文）。
 
 ## 配置
 
 首次运行会生成 `config.ini`（Windows / macOS 在应用旁 `Data/`，Linux 在 `~/.config/MihomoTray/`）。  
-默认模板按小节空行排版，注释里说明如何对照 mihomo 自己的 external-controller 填写 `controller` / `secret` / `panel_url`。  
+默认模板按小节空行排版，注释里说明如何对照 mihomo 配置文件填写 controller / secret / panel_url  
 仅 Windows 有 `theme`；改完配置后需重启本小工具。
 
 ## 本地构建

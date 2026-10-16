@@ -10,9 +10,9 @@ Windows、macOS、Linux 各用原生代码，**版本号各自独立**，合在�
 
 | 平台 | 目录 | 版本 | 正式发行版 |
 |------|------|------|------|
-| Windows | [windows/](windows/) | 2.1.9 | 文件名：`MihomoTray_windows_2.1.9.zip` |
-| macOS | [macos/](macos/) | 1.0.6 | 文件名：`MihomoTray_macos_1.0.6.zip`（通用）/ `_AppleSilicon.zip` / `_Intel.zip` |
-| Linux | [linux/](linux/) | 1.0.5 | Qt AppImage + GTK 的 `.deb` / `.rpm` / `.tar.gz` |
+| Windows | [windows/](windows/) | 2.1.9 | `MihomoTray_windows_2.1.9.zip` |
+| macOS | [macos/](macos/) | 1.0.6 | `MihomoTray_macos_1.0.6.zip`（通用）/ `_AppleSilicon.zip` / `_Intel.zip` |
+| Linux | [linux/](linux/) | 1.0.5 | `.deb` / `.rpm` / `.tar.gz`（Qt AppImage + GTK）|
 
 Windows 版与 Linux 版图标一致：规则 = 原色蓝猫、全局 = 红、直连 = 绿、未连接 = 灰  
 macOS 版混用 template 图标：规则 = 单色黑/白猫、全局 = 红、直连 = 绿、未连接 = 灰

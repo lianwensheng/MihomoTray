@@ -10,9 +10,9 @@ Windows, macOS, and Linux each use native code with **independent version number
 
 | Platform | Directory | Version | Release artifacts |
 |----------|-----------|---------|-------------------|
-| Windows | [windows/](windows/) | 2.1.9 | Filename: `MihomoTray_windows_2.1.9.zip` |
-| macOS | [macos/](macos/) | 1.0.6 | Filename: `MihomoTray_macos_1.0.6.zip` (Universal) / `_AppleSilicon.zip` / `_Intel.zip` |
-| Linux | [linux/](linux/) | 1.0.5 | Qt AppImage + GTK `.deb` / `.rpm` / `.tar.gz` |
+| Windows | [windows/](windows/) | 2.1.9 | `MihomoTray_windows_2.1.9.zip` |
+| macOS | [macos/](macos/) | 1.0.6 | `MihomoTray_macos_1.0.6.zip` (Universal) / `_AppleSilicon.zip` / `_Intel.zip` |
+| Linux | [linux/](linux/) | 1.0.5 | `.deb` / `.rpm` / `.tar.gz` (Qt AppImage + GTK) |
 
 Windows and Linux share the same icon style: Rule = original blue cat, Global = red, Direct = green, Offline = grey  
 macOS mixes template icons: Rule = black/white cat, Global = red, Direct = green, Offline = grey

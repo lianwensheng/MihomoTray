@@ -48,6 +48,7 @@ class GtkTrayApp:
         self._polling = False
         self._switch_seq = 0
         self._switching = 0
+        self._pending_mode = None
         self._lock = threading.Lock()
         self.icon_paths = {n: icons.ensure_user_icon(n) for n in icons.ICON_NAMES}
         self.icon_key = "offline"
@@ -210,22 +211,30 @@ class GtkTrayApp:
     def switch_mode(self, mode):
         if self.disposed:
             return
+        self._pending_mode = mode
         self._switch_seq += 1
         seq = self._switch_seq
         self._switching += 1
 
         def work():
+            # 连点时只认最新目标：飞行中被更新则再 set，避免旧请求后到盖模式
             err, now = None, None
             try:
-                self.client.set_mode(mode)
-                if self.cfg.close_connections:
-                    try:
-                        self.client.close_all_connections()
-                    except Exception:
-                        pass
-                now = self.client.get_status()
+                while True:
+                    target = self._pending_mode
+                    snap = self._switch_seq
+                    self.client.set_mode(target)
+                    if self.cfg.close_connections:
+                        try:
+                            self.client.close_all_connections()
+                        except Exception:
+                            pass
+                    now = self.client.get_status()
+                    if snap == self._switch_seq:
+                        break
             except Exception as e:
                 err = e
+                now = None
 
             def done():
                 self._switching -= 1

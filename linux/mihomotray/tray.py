@@ -52,6 +52,7 @@ class TrayApp(QObject):
         self._polling = False
         self._switch_seq = 0
         self._switching = 0
+        self._pending_mode = None
         self._last_panel_open = 0.0
         self._lock = threading.Lock()
         self._result.connect(lambda fn: fn())
@@ -195,22 +196,30 @@ class TrayApp(QObject):
     def switch_mode(self, mode):
         if self.disposed:
             return
+        self._pending_mode = mode
         self._switch_seq += 1
         seq = self._switch_seq
         self._switching += 1
 
         def work():
+            # 连点时只认最新目标：若飞行中又被更新，循环再 set 一次，避免旧请求后到把模式盖回去
             err, now = None, None
             try:
-                self.client.set_mode(mode)
-                if self.cfg.close_connections:
-                    try:
-                        self.client.close_all_connections()
-                    except Exception:
-                        pass
-                now = self.client.get_status()
+                while True:
+                    target = self._pending_mode
+                    snap = self._switch_seq
+                    self.client.set_mode(target)
+                    if self.cfg.close_connections:
+                        try:
+                            self.client.close_all_connections()
+                        except Exception:
+                            pass
+                    now = self.client.get_status()
+                    if snap == self._switch_seq:
+                        break
             except Exception as e:
                 err = e
+                now = None
 
             def done():
                 self._switching -= 1

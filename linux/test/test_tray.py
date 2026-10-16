@@ -300,10 +300,11 @@ class TrayTest(Base):
         self.assertTrue(self.wait(lambda: t.icon_key == "global" and t._switching == 0))
         self.assertTrue(t.act_modes["global"].isChecked() and not t.act_modes["rule"].isChecked())
         self.assertEqual(MihomoClient("127.0.0.1:%d" % self.port, "").get_mode(), "global")
-        # 连点：只采用最后一次
+        # 连点：只采用最后一次（图标与控制器都应为 rule）
         t.switch_mode("direct"); t.switch_mode("rule")
-        self.assertTrue(self.wait(lambda: t._switching == 0))
-        self.assertEqual(t.icon_key, "rule"); self.assertEqual(t.warnings, [])
+        self.assertTrue(self.wait(lambda: t._switching == 0 and t.icon_key == "rule"))
+        self.assertEqual(MihomoClient("127.0.0.1:%d" % self.port, "").get_mode(), "rule")
+        self.assertEqual(t.warnings, [])
         t.timer.stop(); t.disposed = True
 
     def test_offline(self):

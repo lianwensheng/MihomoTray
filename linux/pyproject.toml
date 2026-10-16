@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mihomotray"
-version = "1.0.5"
+version = "1.0.6"
 description = "Tray icon that shows and switches the mihomo proxy mode"
 requires-python = ">=3.9"
 dependencies = []

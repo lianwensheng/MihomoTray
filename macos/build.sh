@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Build MihomoTray macOS 1.0.6 .app — arm64 / x86_64, plus universal when both are built.
+# Build MihomoTray macOS 1.0.7 .app — arm64 / x86_64, plus universal when both are built.
 # Usage:
 #   ./build.sh           # dist/arm64/, dist/x86_64/, dist/universal/
 #   ./build.sh arm64     # Apple Silicon only

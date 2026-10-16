@@ -1,4 +1,4 @@
-MihomoTray (Windows) 2.1.9
+MihomoTray (Windows) 2.3.5
 ================================
 
 Mihomo tray helper. Colored icons show the current proxy mode so you notice if Global was left on. Left-click opens the controller dashboard; right-click switches modes — handy when you only need light control of Mihomo.

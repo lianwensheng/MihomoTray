@@ -229,7 +229,7 @@ class ClientTest(Base):
             with self.assertRaises(MihomoError): parse_status(bad)
 
     def test_user_agent(self):
-        self.assertEqual(__version__, "1.0.5")
+        self.assertEqual(__version__, "1.0.6")
 
 
 class AutostartTest(unittest.TestCase):
@@ -249,7 +249,7 @@ class AutostartTest(unittest.TestCase):
         self.assertIsNone(autostart.sync(False)); self.assertFalse(os.path.exists(p))
         self.assertIsNone(autostart.sync(True)); self.assertTrue(os.path.exists(p))
         self.assertIn("-m mihomotray", open(p).read())
-        appimg = os.path.join(TMP, "MihomoTray_linux_qt_1.0.5_x86_64.AppImage"); open(appimg, "w").close()
+        appimg = os.path.join(TMP, "MihomoTray_linux_qt_1.0.6_x86_64.AppImage"); open(appimg, "w").close()
         os.environ["APPIMAGE"] = appimg
         try:
             autostart.sync(True); self.assertIn("Exec=" + appimg + "\n", open(p).read())

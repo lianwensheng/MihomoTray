@@ -35,7 +35,7 @@ final class MihomoClient {
         }
         var req = URLRequest(url: url, timeoutInterval: TimeInterval(timeoutMs) / 1000.0)
         req.httpMethod = method
-        req.setValue("MihomoTray/1.0.6", forHTTPHeaderField: "User-Agent")
+        req.setValue("MihomoTray/1.0.7", forHTTPHeaderField: "User-Agent")
         req.cachePolicy = .reloadIgnoringLocalCacheData
         if !secret.isEmpty {
             req.setValue("Bearer \(secret)", forHTTPHeaderField: "Authorization")

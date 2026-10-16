@@ -30,7 +30,7 @@ namespace MihomoTray
             req.Timeout = TimeoutMs;
             req.ReadWriteTimeout = TimeoutMs;
             req.KeepAlive = false;
-            req.UserAgent = "MihomoTray/2.1.9";
+            req.UserAgent = "MihomoTray/2.3.5";
             if (_secret.Length > 0)
             {
                 for (int i = 0; i < _secret.Length; i++)

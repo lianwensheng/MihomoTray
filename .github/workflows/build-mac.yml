@@ -56,10 +56,13 @@ jobs:
           lipo -archs dist/arm64/MihomoTray.app/Contents/MacOS/MihomoTray
           echo "=== x86_64 ==="
           lipo -archs dist/x86_64/MihomoTray.app/Contents/MacOS/MihomoTray
+          echo "=== universal ==="
+          lipo -archs dist/universal/MihomoTray.app/Contents/MacOS/MihomoTray
 
       - name: Package
         run: |
           v=${{ steps.ver.outputs.version }}
+          ditto -c -k --keepParent dist/universal "MihomoTray_macos_${v}.zip"
           ditto -c -k --keepParent dist/arm64 "MihomoTray_macos_${v}_AppleSilicon.zip"
           ditto -c -k --keepParent dist/x86_64 "MihomoTray_macos_${v}_Intel.zip"
           ls -lh *.zip
@@ -68,6 +71,7 @@ jobs:
         with:
           name: MihomoTray_macos_${{ steps.ver.outputs.version }}
           path: |
+            macos/MihomoTray_macos_${{ steps.ver.outputs.version }}.zip
             macos/MihomoTray_macos_${{ steps.ver.outputs.version }}_AppleSilicon.zip
             macos/MihomoTray_macos_${{ steps.ver.outputs.version }}_Intel.zip
 
@@ -76,8 +80,9 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           name: macOS v${{ steps.ver.outputs.version }}
-          body: "Pre-release: macOS MihomoTray v${{ steps.ver.outputs.version }} Apple Silicon + Intel (built by GitHub Actions)."
+          body: "Pre-release: macOS MihomoTray v${{ steps.ver.outputs.version }} Universal + Apple Silicon + Intel (built by GitHub Actions)."
           tag_name: ${{ github.ref_name }}
           files: |
+            macos/MihomoTray_macos_${{ steps.ver.outputs.version }}.zip
             macos/MihomoTray_macos_${{ steps.ver.outputs.version }}_AppleSilicon.zip
             macos/MihomoTray_macos_${{ steps.ver.outputs.version }}_Intel.zip

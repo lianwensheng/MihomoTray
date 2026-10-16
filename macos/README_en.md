@@ -52,13 +52,13 @@ No `theme` (unlike Windows). Deleting `config.ini` regenerates defaults; upgrade
 ## Build (on a Mac)
 
 ```bash
-./build.sh          # -> dist/arm64/ and dist/x86_64/
+./build.sh          # -> dist/arm64/, dist/x86_64/, dist/universal/
 ./build.sh arm64
 ./build.sh x86_64
 ./build.sh native
 ```
 
-Needs Xcode or CLT (`swiftc`). Separate Intel and Apple Silicon zips (no universal).
+Needs Xcode or CLT (`swiftc`). `./build.sh` (both) also `lipo`s a Universal 2 binary. Release ships three zips: `MihomoTray_macos_<version>.zip` (Universal), `_AppleSilicon.zip`, `_Intel.zip`.
 
 ## Version / CI
 

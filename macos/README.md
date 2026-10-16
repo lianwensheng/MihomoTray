@@ -52,13 +52,13 @@ Data/Icons/          可选覆盖托盘图（同名 PNG；资源默认在 Assets
 ## 构建（需在 Mac 上）
 
 ```bash
-./build.sh          # -> dist/arm64/ 与 dist/x86_64/
+./build.sh          # -> dist/arm64/、dist/x86_64/、dist/universal/
 ./build.sh arm64    # 仅 Apple Silicon
 ./build.sh x86_64   # 仅 Intel
 ./build.sh native   # 仅本机架构
 ```
 
-需要 Xcode 或 CLT（`swiftc`）。发布分别提供 Intel 与 Apple Silicon zip（不打 universal）。
+需要 Xcode 或 CLT（`swiftc`）。`./build.sh`（both）会再用 `lipo` 打出通用二进制（Universal 2）。发布三个 zip：`MihomoTray_macos_<版本>.zip`（通用）、`_AppleSilicon.zip`、`_Intel.zip`。
 
 ## 版本与 CI
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# Build MihomoTray macOS 1.0.6 .app — separate Intel (x86_64) and Apple Silicon (arm64) apps.
+# Build MihomoTray macOS 1.0.6 .app — arm64 / x86_64, plus universal when both are built.
 # Usage:
-#   ./build.sh           # build both into dist/arm64/ and dist/x86_64/
+#   ./build.sh           # dist/arm64/, dist/x86_64/, dist/universal/
 #   ./build.sh arm64     # Apple Silicon only
 #   ./build.sh x86_64    # Intel only
 #   ./build.sh native    # host arch only (uname -m)
@@ -94,5 +94,20 @@ for a in $ARCHS; do
   build_one "$a"
 done
 
-echo "OK. Outputs under $DIST/{arm64,x86_64}/"
+# both → lipo 出通用二进制（Universal 2）
+if [[ -d "$DIST/arm64/$APP_NAME.app" && -d "$DIST/x86_64/$APP_NAME.app" ]]; then
+  UOUT="$DIST/universal"
+  UAPP="$UOUT/$APP_NAME.app"
+  rm -rf "$UOUT"
+  mkdir -p "$UOUT"
+  cp -R "$DIST/arm64/$APP_NAME.app" "$UAPP"
+  cp -R "$DIST/arm64/Data" "$UOUT/Data"
+  cp "$DIST/arm64/README.md" "$DIST/arm64/README_en.md" "$UOUT/" 2>/dev/null || true
+  lipo -create     "$DIST/arm64/$APP_NAME.app/Contents/MacOS/$APP_NAME"     "$DIST/x86_64/$APP_NAME.app/Contents/MacOS/$APP_NAME"     -output "$UAPP/Contents/MacOS/$APP_NAME"
+  chmod +x "$UAPP/Contents/MacOS/$APP_NAME"
+  echo "Built universal -> $UAPP"
+  lipo -archs "$UAPP/Contents/MacOS/$APP_NAME" || true
+fi
+
+echo "OK. Outputs under $DIST/{arm64,x86_64,universal}/"
 echo "Version $VERSION (CFBundleVersion ${BUILD:-?})"

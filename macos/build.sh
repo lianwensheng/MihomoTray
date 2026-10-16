@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Build MihomoTray macOS 1.0.5 .app — separate Intel (x86_64) and Apple Silicon (arm64) apps.
+# Build MihomoTray macOS 1.0.6 .app — separate Intel (x86_64) and Apple Silicon (arm64) apps.
 # Usage:
 #   ./build.sh           # build both into dist/arm64/ and dist/x86_64/
 #   ./build.sh arm64     # Apple Silicon only

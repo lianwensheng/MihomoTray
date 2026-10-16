@@ -1,4 +1,4 @@
-# MihomoTray (Linux) 1.0.3
+# MihomoTray (Linux) 1.0.5
 
 Mihomo tray helper. Icon colors show Rule / Global / Direct so Global left on is obvious. Chinese: `README.md`.
 
@@ -6,7 +6,7 @@ Mihomo tray helper. Icon colors show Rule / Global / Direct so Global left on is
 
 | Variant | Artifacts | Notes |
 |---------|-----------|-------|
-| **Qt (slim AppImage)** | `MihomoTray_linux_qt_1.0.3_x86_64.AppImage` | ~46MB; left-click panel on KDE/XFCE; hover when the desktop supports it |
+| **Qt (slim AppImage)** | `MihomoTray_linux_qt_1.0.5_x86_64.AppImage` | ~46MB; left-click panel on KDE/XFCE; hover when the desktop supports it |
 | **GTK (light)** | `.deb` / `.rpm` / `.tar.gz` | Tiny; menu-first; **no hover** — when offline use the grey status line at the top of the menu |
 
 Shared config / client / strings / autostart. Same CFW-style cat icons as Windows: original / red / green / grey.
@@ -56,14 +56,14 @@ No `theme`. Missing keys are appended on upgrade.
 ## Run / build
 
 ```bash
-./MihomoTray_linux_qt_1.0.3_x86_64.AppImage
-sudo apt install ./MihomoTray_linux_1.0.3.deb && mihomotray
+./MihomoTray_linux_qt_1.0.5_x86_64.AppImage
+sudo apt install ./MihomoTray_linux_1.0.5.deb && mihomotray
 ./build.sh all    # or qt / gtk
 ```
 
 ## Version / CI
 
-Marketing `__version__` **1.0.3**; local `__build__` starts at 0 (not in UA); N>0 adds `.N` to local artifact names. Workflow `build-linux.yml`; tags `linux-v*`.
+Marketing `__version__` **1.0.5**; local `__build__` starts at 0 (not in UA); N>0 adds `.N` to local artifact names. Workflow `build-linux.yml`; tags `linux-v*`.
 
 ## FAQ
 

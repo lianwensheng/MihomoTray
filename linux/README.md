@@ -1,4 +1,4 @@
-# MihomoTray（Linux）1.0.3
+# MihomoTray（Linux）1.0.5
 
 Mihomo 托盘小工具，按不同颜色图标显示当前代理模式，防止忘关全局模式；菜单切换规则 / 全局 / 直连，方便轻量操作。英文见 `README_en.md`。
 
@@ -6,7 +6,7 @@ Mihomo 托盘小工具，按不同颜色图标显示当前代理模式，防止�
 
 | 变体 | 产物 | 说明 |
 |------|------|------|
-| **Qt（精简 AppImage）** | `MihomoTray_linux_qt_1.0.3_x86_64.AppImage` | 约 46MB；KDE/XFCE 等可左键开面板；桌面支持时有悬停 |
+| **Qt（精简 AppImage）** | `MihomoTray_linux_qt_1.0.5_x86_64.AppImage` | 约 46MB；KDE/XFCE 等可左键开面板；桌面支持时有悬停 |
 | **GTK（轻量）** | `.deb` / `.rpm` / `.tar.gz` | 约几百 KB；以菜单为主；**无悬停**，断连时看菜单顶灰字 |
 
 两变体共用配置 / 连接 / 文案 / 开机自启逻辑。图标与 Windows 同套 CFW 猫：规则原色、全局红、直连绿、未连接灰。
@@ -58,18 +58,18 @@ Mihomo 托盘小工具，按不同颜色图标显示当前代理模式，防止�
 ### Qt AppImage
 
 ```bash
-chmod +x MihomoTray_linux_qt_1.0.3_x86_64.AppImage
-./MihomoTray_linux_qt_1.0.3_x86_64.AppImage
+chmod +x MihomoTray_linux_qt_1.0.5_x86_64.AppImage
+./MihomoTray_linux_qt_1.0.5_x86_64.AppImage
 # 无 FUSE：
-./MihomoTray_linux_qt_1.0.3_x86_64.AppImage --appimage-extract-and-run
+./MihomoTray_linux_qt_1.0.5_x86_64.AppImage --appimage-extract-and-run
 ```
 
 ### GTK 包
 
 ```bash
-sudo apt install ./MihomoTray_linux_1.0.3.deb && mihomotray   # Debian/Ubuntu
-sudo dnf install ./MihomoTray_linux_1.0.3.rpm && mihomotray   # Fedora
-tar xzf MihomoTray_linux_gtk_1.0.3.tar.gz && cd MihomoTray_linux_gtk_1.0.3 && sudo ./install.sh
+sudo apt install ./MihomoTray_linux_1.0.5.deb && mihomotray   # Debian/Ubuntu
+sudo dnf install ./MihomoTray_linux_1.0.5.rpm && mihomotray   # Fedora
+tar xzf MihomoTray_linux_gtk_1.0.5.tar.gz && cd MihomoTray_linux_gtk_1.0.5 && sudo ./install.sh
 ```
 
 ### 从源码
@@ -82,7 +82,7 @@ MIHOMOTRAY_FRONTEND=gtk ./run.sh
 
 ## 版本与 CI
 
-- 发版号 `__version__` = **1.0.3**（UA / 包名）
+- 发版号 `__version__` = **1.0.5**（UA / 包名）
 - 本地 `__build__` 从 0 起，不进 UA；N>0 时本地产物名带 `.N`
 - Actions：`build-linux.yml`；标签 `linux-v*`
 

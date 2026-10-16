@@ -1,4 +1,4 @@
-# MihomoTray (macOS) 1.0.5
+# MihomoTray (macOS) 1.0.6
 
 Mihomo menubar helper. Colored icons show the current proxy mode so Global left on is obvious. Left-click opens the dashboard; right-click switches modes. Chinese: `README.md`.
 
@@ -62,8 +62,8 @@ Needs Xcode or CLT (`swiftc`). Separate Intel and Apple Silicon zips (no univers
 
 ## Version / CI
 
-- Marketing `CFBundleShortVersionString` = **1.0.5**
-- Build `CFBundleVersion` = **1.0.5.N** (bump only the 4th segment locally)
+- Marketing `CFBundleShortVersionString` = **1.0.6**
+- Build `CFBundleVersion` = **1.0.6.N** (bump only the 4th segment locally)
 - Actions: `build-mac.yml`; tags `mac-v*`
 
 Unsigned: first open via Finder → Open.

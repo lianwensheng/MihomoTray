@@ -3,7 +3,7 @@ rem 在 Windows 上编译：用系统自带的 .NET Framework 4.x csc，不用�
 rem 用法：双击 build.bat  -> dist\MihomoTray.exe（右键菜单为 Windows 原生菜单）
 chcp 65001 >nul
 setlocal
-rem MihomoTray 2.1.8；CI 环境（GitHub Actions 会设 CI=true）里不 pause，本地双击照旧
+rem MihomoTray 2.1.9；CI 环境（GitHub Actions 会设 CI=true）里不 pause，本地双击照旧
 set "PAUSE=pause"
 if defined CI set "PAUSE=type nul>nul"
 cd /d "%~dp0"

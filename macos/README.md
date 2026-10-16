@@ -1,4 +1,4 @@
-# MihomoTray（macOS）1.0.5
+# MihomoTray（macOS）1.0.6
 
 Mihomo 菜单栏小工具，按不同颜色图标显示当前代理模式，防止忘关全局模式；左键打开控制器面板，右键菜单切换模式，方便轻量操作 Mihomo。英文见 `README_en.md`。
 
@@ -62,8 +62,8 @@ Data/Icons/          可选覆盖托盘图（同名 PNG；资源默认在 Assets
 
 ## 版本与 CI
 
-- 发版号 `CFBundleShortVersionString` = **1.0.5**
-- 构建号 `CFBundleVersion` = **1.0.5.N**（本地只加第 4 段 N）
+- 发版号 `CFBundleShortVersionString` = **1.0.6**
+- 构建号 `CFBundleVersion` = **1.0.6.N**（本地只加第 4 段 N）
 - Actions：`build-mac.yml`；标签 `mac-v*`
 
 未签名/未公证：首次请在 Finder 右键 → 打开。

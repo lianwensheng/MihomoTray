@@ -1,4 +1,4 @@
-# MihomoTray（Windows）2.1.8
+# MihomoTray（Windows）2.1.9
 
 Windows 托盘小工具，用来切换 mihomo 代理模式（规则 / 全局 / 直连）。
 
@@ -58,8 +58,8 @@ sudo apt install mono-devel python3-pil
 
 ## 版本与 CI
 
-- 产品版本 **2.1.8**（`AssemblyInformationalVersion`，UA `MihomoTray/2.1.8`）
-- 文件版本 **2.1.8.0**（本地小改只加第 4 段 N）
+- 产品版本 **2.1.9**（`AssemblyInformationalVersion`，UA `MihomoTray/2.1.9`）
+- 文件版本 **2.1.9.0**（本地小改只加第 4 段 N）
 - Actions：`build-win.yml`；标签 `win-v*` 发 Release
 
 exe 未签名，首次运行 SmartScreen 可能提示，选「更多信息 → 仍要运行」。
